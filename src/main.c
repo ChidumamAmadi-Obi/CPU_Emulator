@@ -2,6 +2,9 @@
 
 #include "ALU.h"
 
+Memory memory;
+CPU cpu;
+
 int main(void) {
     // testing alu
     int a = -127;

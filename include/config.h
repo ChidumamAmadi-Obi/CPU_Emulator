@@ -3,6 +3,8 @@
 
 #include <stdbool.h>
 #include <stdint.h>
+#include <stdio.h>
+#include <stdlib.h>
 
 #define MSB 0x80
 #define LSB 0x01
@@ -39,6 +41,20 @@ typedef enum{
     OP_DIVIDE,           
     OP_MULT,             
 }ALUOperations;
+
+typedef struct{
+    uint8_t instructionReg;
+    uint8_t *programCounter;
+    uint8_t gpRegs[16];
+}CPU;
+
+typedef struct {
+    uint8_t ram[32];
+    uint8_t rom[32];
+}Memory;
+
+extern Memory memory;
+extern CPU cpu;
 
 #endif
 
