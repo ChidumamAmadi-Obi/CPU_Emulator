@@ -6,20 +6,17 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+// alu constants
 #define MSB 0x80
 #define LSB 0x01
 #define MAX_NUMBER 127
 #define MIN_NUMBER -128
 
-typedef struct{
-    int8_t output;
-    int16_t tempResult;
-    bool zeroFlag;
-    bool carryFlag;
-    bool overflowFlag;
-    bool negativeFlag;
-    bool errorFlag;
-}ALUResults;
+// memory constants
+#define PRINT_PROGRAM_MODE 0
+#define INSTS 64
+#define INST_LENGTH 16
+
 
 typedef enum{
     OP_ADD,              
@@ -41,20 +38,29 @@ typedef enum{
     OP_DIVIDE,           
     OP_MULT,             
 }ALUOperations;
+typedef enum{
+    CHAR,
+    INTEGER,
+    HEX
+}MemPrintModes;
 
+typedef struct{
+    int8_t output;
+    int16_t tempResult;
+    bool zeroFlag;
+    bool carryFlag;
+    bool overflowFlag;
+    bool negativeFlag;
+    bool errorFlag;
+}ALUResults;
 typedef struct{
     uint8_t instructionReg;
     uint8_t *programCounter;
     uint8_t gpRegs[16];
+    uint8_t ram[INSTS][INST_LENGTH];
 }CPU;
 
-typedef struct {
-    uint8_t ram[32];
-    uint8_t rom[32];
-}Memory;
-
-extern Memory memory;
-extern CPU cpu;
+CPU cpu;
 
 #endif
 
