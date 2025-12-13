@@ -1,16 +1,18 @@
-#include <stdio.h>
+#include "control_unit.h"
 
-#include "ALU.h"
-#include "registers.h"
-#include "memory.h"
+DecodedInst instructions;
 
-#include <string.h>
+int main(void) { // testing ram and program loading
+    memInit(&cpu); initCtrlUnit(&cpu);
+    loadProgram(&cpu);
+    // debugRAM(PRINT_PROGRAM_MODE,&cpu);
 
-int main(void) {
-    // testing ram and program loading
-    memInit();
-    loadProgram();
-    debugRAM(PRINT_PROGRAM_MODE);
+    // complete one cycle of fetch, decode execute
+    cpuFetch(&cpu); 
+    instructions = cpuDecode(&cpu);
+    cpuExecute(&instructions,&cpu);
+
+    printf("%d", cpu.gpRegs[0]);
     return 0;
 }
 
