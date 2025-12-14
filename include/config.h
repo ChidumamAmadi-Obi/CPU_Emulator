@@ -7,6 +7,11 @@
 #include <stdlib.h>
 #include <string.h>
 
+// debugging
+#define PRINT_RAM_MODE 0 // 1: char, 2: int, 3:hex 
+#define PRINT_PC 0
+
+// ascii stuff
 #define ASCII_SPACE 0x20
 #define ASCII_SEMI_COLON 0x3b
 
@@ -17,9 +22,8 @@
 #define MIN_NUMBER -128
 
 // memory constants
-#define PRINT_PROGRAM_MODE 3
 #define RAM_SIZE 128
-#define INST_LENGTH 16
+#define INST_LENGTH 24
 
 typedef enum{
     STR=1,
@@ -30,14 +34,14 @@ typedef enum{
     JMP_OFW=5,
     JMP_ZRO=6,
     JMP_NEG=7,
-    JMP_ABV=8,
+    JMP_ABV=8, // jump if neither the zero or negative flags are true
 
     ADD=9,
     SUB=10,
     AND=11,
     OR=12,
     XOR=13,
-    EQU=14
+    EQU=14,
 }CPUInstruction;
 typedef enum{
     OP_ADD,              
@@ -60,36 +64,39 @@ typedef enum{
     OP_MULT,             
 }ALUOperations;
 typedef enum{
+    NONE,
     CHAR,
     INTEGER,
     HEX
 }MemPrintModes;
 
-typedef struct{
+typedef struct{ 
     int8_t output;
     int16_t tempResult;
-    bool zeroFlag;
     bool carryFlag;
-    bool overflowFlag;
-    bool negativeFlag;
     bool errorFlag;
 }ALUResults;
 typedef struct{
     uint8_t instructionReg[INST_LENGTH];
     uint8_t programCounter;
-    uint8_t gpRegs[16];
-    uint8_t ram[RAM_SIZE][INST_LENGTH];
-    bool errorFlag;
-    bool isRunning;
+    int8_t gpRegs[16];
+    int8_t ram[RAM_SIZE][INST_LENGTH];
+
+    bool errorFlag; // alu flags
+    bool zeroFlag;
+    bool overflowFlag;
+    bool negativeFlag;
+
+    bool isRunning; 
+    bool isJumping;
 }CPU;
-typedef struct{
+typedef struct{ // parsed instruction
     CPUInstruction opcodeNo;
     char*opcode;
     char*operand1;
     char*operand2;
     char*operand3;
 }DecodedInst;
-CPU cpu;
 
 #endif
 
@@ -112,18 +119,5 @@ Phase 3:
 
 Phase 4: 
     Clock/timing simulation
-*/
 
-/*
-future opcodes
-JMP - overwrites address register (jumps to speficied address in rom)
-STR - store
-LD  - load
-HALT- stop program
-
-JMP_OFW
-JMP_ZRO
-JMP_NEG
-JMP_ABV
-
-*/
+https://youtu.be/rdKX9hzA2lU?si=gsVF8THibba89D1V */

@@ -5,12 +5,13 @@
 
 // 8 bit ALU handles SIGNED arithmetic
 
-void clearFlags(ALUResults* results){ // clears all status flags
-    results->carryFlag = false;    
-    results->overflowFlag = false; 
+void clearFlags(ALUResults* results, CPU* cpu){ // clears all alu status flags
     results->errorFlag = false;
-    results->negativeFlag = false;
-    results->zeroFlag = false;
+    results->carryFlag = false;    
+
+    cpu->overflowFlag = false; 
+    cpu->negativeFlag = false;
+    cpu->zeroFlag = false;
 }
 
 bool detectOverflow(int8_t inputA, int8_t inputB, ALUOperations operation, ALUResults* results ){ // detects overflow whith arithmetic ops
@@ -32,7 +33,7 @@ bool detectOverflow(int8_t inputA, int8_t inputB, ALUOperations operation, ALURe
     } else return false;   
 }
 
-ALUResults ALUEmulator(int8_t inputA, int8_t inputB, ALUOperations operation) {
+ALUResults ALUEmulator(int8_t inputA, int8_t inputB, ALUOperations operation, CPU *cpu) {
     ALUResults results = {0}; // initializes all members with zero
     bool isBitwiseOp = false;
 
@@ -70,13 +71,13 @@ ALUResults ALUEmulator(int8_t inputA, int8_t inputB, ALUOperations operation) {
         case OP_ROTATE_LEFT: // rotates once
             results.carryFlag = (inputA & MSB) != 0;  // MSB becomes carry
             results.output = (inputA << 1) | (results.carryFlag ? 1 : 0);
-            results.overflowFlag = false;
+            cpu->overflowFlag = false;
             break;
 
         case OP_ROTATE_RIGHT:
             results.carryFlag = (inputA & LSB) != 0;  // LSB becomes carry
             results.output = (inputA >> 1) | (results.carryFlag ? MSB : 0);
-            results.overflowFlag = false;
+            cpu->overflowFlag = false;
             break;
 
         case OP_AND: case OP_NAND: case OP_OR: case OP_XOR: case OP_NOR: case OP_XNOR: case OP_EQU: case OP_GREATER_THAN: case OP_LESS_THAN: 
@@ -92,7 +93,7 @@ ALUResults ALUEmulator(int8_t inputA, int8_t inputB, ALUOperations operation) {
                 case OP_GREATER_THAN:   results.output = (inputA > inputB) ? 1 : 0; break;
                 case OP_LESS_THAN:      results.output = (inputA < inputB) ? 1 : 0; break;
             }
-            clearFlags(&results); // no flags for bitwise operations
+            clearFlags(&results,cpu); // no flags for bitwise operations
             break;        
         
         default: 
@@ -102,10 +103,10 @@ ALUResults ALUEmulator(int8_t inputA, int8_t inputB, ALUOperations operation) {
     }
 
     if (!results.errorFlag && !isBitwiseOp) { // update flags if no errors and no bitwise ops
-        results.overflowFlag = detectOverflow(inputA,inputB,operation,&results);
-        results.zeroFlag = (results.output == 0) ? true : false;
-        results.negativeFlag = (results.output & MSB) != 0;  // Checks MSB (bit 7)
-    }
+        cpu->overflowFlag = detectOverflow(inputA,inputB,operation,&results);
+        cpu->zeroFlag = (results.output == 0) ? true : false;
+        cpu->negativeFlag = (results.output & MSB) != 0;  // Checks MSB (bit 7)
+    } else if (results.errorFlag) cpu->errorFlag=true;
     return results;
 }
 

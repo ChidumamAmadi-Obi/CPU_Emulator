@@ -5,7 +5,9 @@
 #include "ALU.h"
 #include "memory.h"
 
-int getRegNo(char*operand){ // extracts number from operand
+// CPU instructions
+
+int8_t getRegNo(char*operand){ // extracts reg number from operand
     if(operand[0] =='r'){
         char*regNo = strtok(operand,"r");
         return atoi(regNo);
@@ -13,61 +15,98 @@ int getRegNo(char*operand){ // extracts number from operand
     return 0;
 }
 
-int getMemLocation(char*operand) {
-    bool ifMemLocation = (operand[0] == 'm') && (operand[1] == 'm') && (operand[1] == 'm');
-    return 0;
+int8_t convertToInt(char* operand){ // handles binary and hex numbers
+    if (operand[0] =='*'){ // " * " symbolize memory locations in ram
+        if ((operand[1] == '0') && (operand[2] == 'x' || operand[2] == 'X')) {
+            long decNumberLong = strtol(operand+1, NULL, 16);
+            return (int8_t)decNumberLong;
+        } else if (operand[1] == 'b' || operand[1] == 'B') {
+            long decNumberLong = strtol(operand + 2, NULL, 2);
+            return (int8_t)decNumberLong;
+        } else {
+            long decNumberLong = strtol(operand+1, NULL, 10);
+            return (int8_t)decNumberLong;
+        }
+    } else {
+        if ((operand[0] == '0') && (operand[1] == 'x' || operand[1] == 'X')) {
+            long decNumberLong = strtol(operand, NULL, 16);
+            return (int8_t)decNumberLong;
+        } else if (operand[0] == 'b' || operand[0] == 'B') {
+            long decNumberLong = strtol(operand + 1, NULL, 2);
+            return (int8_t)decNumberLong;
+        } else {
+            long decNumberLong = strtol(operand, NULL, 10);
+            return (int8_t)decNumberLong;
+        }
+    }
 }
 
-void loadInst(){ // take thing from ram and store in reg
+//_____________________________________________________________________________________________
 
+void jumpInst(DecodedInst* inst ,CPU* cpu){ // overrites program counter with chosen instruction 
+    int8_t destination = convertToInt(inst->operand1);
+    cpu->isJumping = true;
+
+    if ((destination >= 0) && (destination < RAM_SIZE/2)){ // can only jump into read only memory
+        cpu->programCounter = destination;
+    }
+}
+
+void jumpCondInst(DecodedInst* inst, CPU* cpu){
+    switch(inst->opcodeNo){
+        case JMP_ABV: if (!cpu->zeroFlag && !cpu->negativeFlag) jumpInst(inst,cpu); break;
+        case JMP_NEG: if (cpu->negativeFlag) jumpInst(inst,cpu); break;
+        case JMP_OFW: if (cpu->overflowFlag) jumpInst(inst,cpu); break;
+        case JMP_ZRO: if (cpu->zeroFlag) jumpInst(inst,cpu); break;
+        default: cpu->errorFlag = true; break;
+    }
+}
+
+void loadInst(DecodedInst *inst, CPU *cpu){ // take thing from ram and store in reg
+    int8_t reg = getRegNo(inst->operand1); // reg val in mem location is moved to 
+    int8_t input = convertToInt(inst->operand2); // memory location
+    cpu->gpRegs[reg] = (inst->operand2[0] == '*') ? cpu->ram[input][0] : input;
 }
 
 void storeInst(DecodedInst *inst, CPU *cpu){ // take thing from reg and store in ram
-    // operand 1 destination eg mem1
-    // operand 2 val eg r1
-
-    static uint8_t destination; 
-    static uint8_t location;
-
-    if (inst->operand1[0] =='r'){ // if both r registers
-        char*regNo = strtok(inst->operand1,"r");
-        destination = cpu->gpRegs[atoi(regNo)];
-    }
+    uint8_t destination = convertToInt(inst->operand1); // memory location 
+    int8_t input; // value to be moved
+        
     if (inst->operand2[0] =='r'){ 
         char*regNo = strtok(inst->operand2,"r");
-        location = cpu->gpRegs[atoi(regNo)];
-    } else location = atoi(inst->operand2);
+        input = cpu->gpRegs[atoi(regNo)];
+    } else input = convertToInt(inst->operand2);
 
-    cpu->gpRegs[destination]=cpu->gpRegs[location];
-    // printf("%d %d",cpu->gpRegs[destination],cpu->gpRegs[location]);
+    if ((destination < RAM_SIZE) && (destination > RAM_SIZE/2)) cpu->ram[destination][0] = input;
+    else cpu->errorFlag = true;
 }
 
 void arithmeticInst(DecodedInst *inst, CPU *cpu){ 
     ALUResults alu = {0};
     int8_t inputA;
     int8_t inputB;
-    int regOut = getRegNo(inst->operand1);
+    uint8_t regOut = getRegNo(inst->operand1);
 
-    if (inst->operand3[0] =='r'){ 
+    if (inst->operand3[0] =='r'){ // get value in reg if wanted
         char*regNo = strtok(inst->operand3,"r");
         inputB = cpu->gpRegs[atoi(regNo)];
-    } else inputB = atoi(inst->operand3);
+    } else inputB = convertToInt(inst->operand3);
 
     if (inst->operand2[0] =='r'){ 
         char*regNo = strtok(inst->operand2,"r");
         inputA = cpu->gpRegs[atoi(regNo)];
-    } else inputA = atoi(inst->operand2);
+    } else inputA = convertToInt(inst->operand2);
 
     switch(inst->opcodeNo){
-        case ADD: alu = ALUEmulator(inputA,inputB,OP_ADD); break;
-        case SUB: alu = ALUEmulator(inputA,inputB,OP_SUB); break;
-        case AND: alu = ALUEmulator(inputA,inputB,OP_AND); break;
-        case OR: alu = ALUEmulator(inputA,inputB,OP_OR); break;
-        case XOR: alu = ALUEmulator(inputA,inputB,OP_XOR); break;
-        case EQU: alu = ALUEmulator(inputA,inputB,OP_EQU); break;
-        default: break;
+        case ADD: alu = ALUEmulator(inputA,inputB,OP_ADD,cpu); break;
+        case SUB: alu = ALUEmulator(inputA,inputB,OP_SUB,cpu); break;
+        case AND: alu = ALUEmulator(inputA,inputB,OP_AND,cpu); break;
+        case OR:  alu = ALUEmulator(inputA,inputB,OP_OR,cpu);  break;
+        case XOR: alu = ALUEmulator(inputA,inputB,OP_XOR,cpu); break;
+        case EQU: alu = ALUEmulator(inputA,inputB,OP_EQU,cpu); break;
+        default: cpu->errorFlag = true; break;
     }
-    cpu->gpRegs[regOut] = alu.output;
+    cpu->gpRegs[regOut] = alu.output; // put result in desired reg
 }
 
 #endif
