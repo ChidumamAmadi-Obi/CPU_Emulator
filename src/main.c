@@ -1,18 +1,14 @@
 #include "control_unit.h"
+#include "cpu.h"
 
-DecodedInst instructions;
+int main(void) { 
+    initCPU(&cpu); // debugRAM(PRINT_PROGRAM_MODE,&cpu);
 
-int main(void) { // testing ram and program loading
-    memInit(&cpu); initCtrlUnit(&cpu);
-    loadProgram(&cpu);
-    // debugRAM(PRINT_PROGRAM_MODE,&cpu);
-
-    // complete one cycle of fetch, decode execute
-    cpuFetch(&cpu); 
-    instructions = cpuDecode(&cpu);
-    cpuExecute(&instructions,&cpu);
-
-    printf("%d", cpu.gpRegs[0]);
+    static DecodedInst instructions; 
+    while (cpu.isRunning){
+        printf("%d \t",cpu.programCounter);
+        runCPU(&cpu);
+    }
     return 0;
 }
 
