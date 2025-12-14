@@ -6,7 +6,7 @@
 #include "memory.h"
 #include "execute.h"
 
-void initCtrlUnit(CPU *cpu){
+void initCtrlUnit(CPU *cpu){ // initializes cpu registers on start up
     cpu->programCounter=0;
     for (int i=0; i<INST_LENGTH; i++){
         cpu->gpRegs[i]=0;
@@ -22,23 +22,23 @@ void cpuFetch(CPU *cpu){ // fetches next instruction in memory and stores it int
     printf("\n");
 }
 
-void extractOpcode(DecodedInst *inst){
-    if ( strcmp(inst->opcode,"HALT") == 0) inst->opcodeNo = HALT;
-    else if ( strcmp(inst->opcode,"STR") == 0) inst->opcodeNo = STR;
-    else if ( strcmp(inst->opcode,"LD") == 0) inst->opcodeNo = LD;
-    else if ( strcmp(inst->opcode,"JMP") == 0) inst->opcodeNo = JMP;
-    else if ( strcmp(inst->opcode,"JMP_OFW") == 0) inst->opcodeNo = JMP_OFW;
-    else if ( strcmp(inst->opcode,"JMP_ZRO") == 0) inst->opcodeNo = JMP_ZRO;
-    else if ( strcmp(inst->opcode,"JMP_NEG") == 0) inst->opcodeNo = JMP_NEG;
-    else if ( strcmp(inst->opcode,"JMP_ABV") == 0) inst->opcodeNo = JMP_ABV;
+CPUInstruction extractOpcode(DecodedInst *inst){
+    if ( strcmp(inst->opcode,"HALT") == 0) return HALT;
+    else if ( strcmp(inst->opcode,"STR") == 0) return STR;
+    else if ( strcmp(inst->opcode,"LD") == 0) return LD;
+    else if ( strcmp(inst->opcode,"JMP") == 0) return JMP;
+    else if ( strcmp(inst->opcode,"JMP_OFW") == 0) return JMP_OFW;
+    else if ( strcmp(inst->opcode,"JMP_ZRO") == 0) return JMP_ZRO;
+    else if ( strcmp(inst->opcode,"JMP_NEG") == 0) return JMP_NEG;
+    else if ( strcmp(inst->opcode,"JMP_ABV") == 0) return JMP_ABV;
 
-    else if ( strcmp(inst->opcode,"ADD") == 0) inst->opcodeNo = ADD; // arithmetic ops
-    else if ( strcmp(inst->opcode,"SUB") == 0) inst->opcodeNo = SUB;
-    else if ( strcmp(inst->opcode,"OR") == 0) inst->opcodeNo = OR;
-    else if ( strcmp(inst->opcode,"XOR") == 0) inst->opcodeNo = XOR;
-    else if ( strcmp(inst->opcode,"EQU") == 0) inst->opcodeNo = EQU;
+    else if ( strcmp(inst->opcode,"ADD") == 0) return ADD; // arithmetic ops
+    else if ( strcmp(inst->opcode,"SUB") == 0) return SUB;
+    else if ( strcmp(inst->opcode,"OR") == 0) return OR;
+    else if ( strcmp(inst->opcode,"XOR") == 0) return XOR;
+    else if ( strcmp(inst->opcode,"EQU") == 0) return EQU;
 
-    else inst->opcodeNo = 0; // invalid opcode
+    else return 0; // invalid opcode
 }
 
 DecodedInst cpuDecode(CPU *cpu) {
@@ -46,7 +46,7 @@ DecodedInst cpuDecode(CPU *cpu) {
     static char instString[INST_LENGTH];
     DecodedInst decodedInst = {0}; // clear inst reg
 
-    if (*instPtr != 0) {
+    if (*instPtr != '\n') {
         for (int i=0; *instPtr != ASCII_SEMI_COLON; i++) { // converts instruction into string to be parsed
             instString[i] = *instPtr;
             instPtr++;
@@ -57,27 +57,27 @@ DecodedInst cpuDecode(CPU *cpu) {
         decodedInst.operand2 = strtok(NULL, " ");
         decodedInst.operand3 = strtok(NULL, " ");
     }
-    extractOpcode(&decodedInst);
+    decodedInst.opcodeNo = extractOpcode(&decodedInst);
     return decodedInst;
 }
 
 void cpuExecute(DecodedInst *inst, CPU *cpu){
     switch(inst->opcodeNo){
-        case ADD: case SUB: case AND: case OR: case XOR: case EQU: 
-        arithmeticInst(inst,cpu); 
-        break;
+        case ADD: case SUB: case AND: case OR: case XOR: case EQU: //math ops
+            arithmeticInst(inst,cpu); 
+            break;
 
-        case STR: break;
+        case STR: storeInst(inst,cpu); break; // address ops
         case LD: break;
         case JMP: break;
-        case HALT: break;
+        case HALT: cpu->isRunning = false; break; // end program
         case JMP_ABV: break;
         case JMP_NEG: break;
         case JMP_OFW: break;
         case JMP_ZRO: break;
         default: break;
     }
-    arithmeticInst(inst,cpu);
+    cpu->programCounter++; // incriment pc to move to the next instruction
 }
 
 #endif

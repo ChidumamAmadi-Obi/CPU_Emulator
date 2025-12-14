@@ -10,6 +10,7 @@ void clearFlags(ALUResults* results){ // clears all status flags
     results->overflowFlag = false; 
     results->errorFlag = false;
     results->negativeFlag = false;
+    results->zeroFlag = false;
 }
 
 bool detectOverflow(int8_t inputA, int8_t inputB, ALUOperations operation, ALUResults* results ){ // detects overflow whith arithmetic ops

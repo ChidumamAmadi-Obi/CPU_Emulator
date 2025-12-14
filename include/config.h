@@ -17,7 +17,7 @@
 #define MIN_NUMBER -128
 
 // memory constants
-#define PRINT_PROGRAM_MODE 2
+#define PRINT_PROGRAM_MODE 3
 #define RAM_SIZE 128
 #define INST_LENGTH 16
 
@@ -79,6 +79,8 @@ typedef struct{
     uint8_t programCounter;
     uint8_t gpRegs[16];
     uint8_t ram[RAM_SIZE][INST_LENGTH];
+    bool errorFlag;
+    bool isRunning;
 }CPU;
 typedef struct{
     CPUInstruction opcodeNo;

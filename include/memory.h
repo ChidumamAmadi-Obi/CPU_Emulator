@@ -3,7 +3,7 @@
 
 #include "config.h"
 
-void memInit(CPU *cpu){
+void initMemory(CPU *cpu){
     for (int j=0; j<INST_LENGTH; j++){
         for (int i=0; i<RAM_SIZE; i++){
             cpu->ram[i][j]=0;
@@ -51,7 +51,7 @@ void debugRAM(MemPrintModes mode, CPU *cpu){ // prints contents of RAM
                 
             }
         }
-        printf("\n");
+        printf("\n\n");
     }
 }
 
