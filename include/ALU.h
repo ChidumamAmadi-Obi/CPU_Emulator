@@ -62,9 +62,7 @@ ALUResults ALUEmulator(int8_t inputA, int8_t inputB, ALUOperations operation, CP
                     results.output = 0;
                 } else {
                     results.output = inputA / inputB;
-                    if (inputA == MIN_NUMBER && inputB == -1) {
-                        results.errorFlag = true;
-                    }
+                    if (inputA == MIN_NUMBER && inputB == -1) results.errorFlag = true;
                 }
         break;
 
@@ -98,7 +96,6 @@ ALUResults ALUEmulator(int8_t inputA, int8_t inputB, ALUOperations operation, CP
         
         default: 
             results.errorFlag = true; 
-            results.output = 0; 
             break;
     }
 
@@ -106,7 +103,10 @@ ALUResults ALUEmulator(int8_t inputA, int8_t inputB, ALUOperations operation, CP
         cpu->overflowFlag = detectOverflow(inputA,inputB,operation,&results);
         cpu->zeroFlag = (results.output == 0) ? true : false;
         cpu->negativeFlag = (results.output & MSB) != 0;  // Checks MSB (bit 7)
-    } else if (results.errorFlag) cpu->errorFlag=true;
+    } else if (results.errorFlag) {
+        cpu->errorFlag=true;
+        results.output=0;
+    } 
     return results;
 }
 

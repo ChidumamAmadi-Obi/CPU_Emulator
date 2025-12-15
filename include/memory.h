@@ -5,7 +5,7 @@
 
 // RAM and ROM memory & program loading
 
-void initMemory(CPU *cpu){
+void initMemory(CPU *cpu){ //initializes mem
     for (int j=0; j<INST_LENGTH; j++){
         for (int i=0; i<RAM_SIZE; i++){
             cpu->ram[i][j]=0;
@@ -24,7 +24,7 @@ void clearRAM(CPU* cpu){ // clears data in ram but not read only memory
 void loadProgram(CPU *cpu){                         // loads program from external txt file into 
     FILE *fptr = fopen("program.txt", "r");         // read only memory, first half of ram
     if (fptr == NULL){
-        printf("Error opening program file\n");
+        printf("ERROR OPENING PROGRAM FILE\n");
         return;
     }
 
@@ -32,7 +32,7 @@ void loadProgram(CPU *cpu){                         // loads program from extern
     int instruction=0;
     int letter=0;
 
-    while ((ch = fgetc(fptr)) != EOF) { //load into ram until end of file
+    while ((ch = fgetc(fptr)) != EOF) { //load program.txt into ram until end of file
         if (ch == '\n' ){
             instruction++;
             letter=0;

@@ -22,7 +22,7 @@
 #define MIN_NUMBER -128
 
 // memory constants
-#define RAM_SIZE 128
+#define RAM_SIZE 256
 #define INST_LENGTH 24
 
 typedef enum{
@@ -63,14 +63,14 @@ typedef enum{
     OP_DIVIDE,           
     OP_MULT,             
 }ALUOperations;
-typedef enum{
+typedef enum{ // for visualizing sata in ram
     NONE,
     CHAR,
     INTEGER,
     HEX
 }MemPrintModes;
 
-typedef struct{ 
+typedef struct{ // alu results
     int8_t output;
     int16_t tempResult;
     bool carryFlag;
@@ -78,17 +78,17 @@ typedef struct{
 }ALUResults;
 typedef struct{
     uint8_t instructionReg[INST_LENGTH];
-    uint8_t programCounter;
     int8_t gpRegs[16];
-    int8_t ram[RAM_SIZE][INST_LENGTH];
+    int8_t ram[RAM_SIZE][INST_LENGTH]; //2d ram unconventional but oh well 
+    uint8_t programCounter;
 
     bool errorFlag; // alu flags
     bool zeroFlag;
     bool overflowFlag;
     bool negativeFlag;
 
-    bool isRunning; 
-    bool isJumping;
+    bool isRunning; // cpu status flags
+    bool isJumping; // keep track of jmp so pc doesnt accidently inc twice
 }CPU;
 typedef struct{ // parsed instruction
     CPUInstruction opcodeNo;
@@ -100,24 +100,4 @@ typedef struct{ // parsed instruction
 
 #endif
 
-/*
-PLAN 
-Phase 1: 
-    ALU
-
-Phase 2: 
-    Program Counter (PC)
-    Instruction Register (IR)
-    General Purpose Registers
-    Memory (RAM/ROM)
-    Control Unit (instruction decoder)
-
-Phase 3: 
-    Fetch-decode-execute cycle
-    Addressing modes
-    Branch/jump logic
-
-Phase 4: 
-    Clock/timing simulation
-
-https://youtu.be/rdKX9hzA2lU?si=gsVF8THibba89D1V */
+// https://youtu.be/rdKX9hzA2lU?si=gsVF8THibba89D1V 

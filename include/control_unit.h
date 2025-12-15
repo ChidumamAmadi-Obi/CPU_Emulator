@@ -22,7 +22,7 @@ void cpuFetch(CPU *cpu, bool printMode){ // fetches next instruction in memory a
     if (printMode) printf("\n");
 }
 
-CPUInstruction extractOpcode(DecodedInst *inst){
+CPUInstruction extractOpcode(CPU* cpu,DecodedInst *inst){
     if ( strcmp(inst->opcode,"HALT") == 0) return HALT;
     else if ( strcmp(inst->opcode,"STR") == 0) return STR;
     else if ( strcmp(inst->opcode,"LD") == 0) return LD;
@@ -38,7 +38,7 @@ CPUInstruction extractOpcode(DecodedInst *inst){
     else if ( strcmp(inst->opcode,"XOR") == 0) return XOR;
     else if ( strcmp(inst->opcode,"EQU") == 0) return EQU;
 
-    else return 0; // invalid opcode
+    else cpu->errorFlag=true; return 0; // invalid opcode
 }
 
 DecodedInst cpuDecode(CPU *cpu) { // parse and decode current instruction
@@ -57,7 +57,7 @@ DecodedInst cpuDecode(CPU *cpu) { // parse and decode current instruction
         decodedInst.operand2 = strtok(NULL, " ");
         decodedInst.operand3 = strtok(NULL, " ");
     }
-    decodedInst.opcodeNo = extractOpcode(&decodedInst);
+    decodedInst.opcodeNo = extractOpcode(cpu,&decodedInst);
     return decodedInst;
 }
 
@@ -67,20 +67,19 @@ void cpuExecute(DecodedInst *inst, CPU *cpu){
             arithmeticInst(inst,cpu); 
             break;
 
-        case JMP_ABV: case JMP_NEG: case JMP_OFW: case JMP_ZRO: 
+        case JMP_ABV: case JMP_NEG: case JMP_OFW: case JMP_ZRO: // conditional jmp ops
             jumpCondInst(inst,cpu); 
             break;
-
-        case STR: storeInst(inst,cpu); break; // address ops
-        case LD: loadInst(inst,cpu);break;
         case JMP: jumpInst(inst,cpu); break;
+
+        case STR: storeInst(inst,cpu); break; // mem ops
+        case LD: loadInst(inst,cpu);break;
         case HALT: cpu->isRunning = false; break; // end program        
         default: cpu->errorFlag = true; break;
     }
     
     if(cpu->isJumping) cpu->isJumping = false;  // reset jumping flag or inc pc
     else cpu->programCounter++;
-    
 }
 
 #endif

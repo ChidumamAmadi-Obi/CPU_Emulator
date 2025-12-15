@@ -1,11 +1,11 @@
 #ifndef CPU_EXECUTE
 #define CPU_EXECUTE
 
+// CPU instructions
+
 #include "config.h"
 #include "ALU.h"
 #include "memory.h"
-
-// CPU instructions
 
 int8_t getRegNo(char*operand){ // extracts reg number from operand
     if(operand[0] =='r'){
@@ -41,7 +41,7 @@ int8_t convertToInt(char* operand){ // handles binary and hex numbers
     }
 }
 
-//_____________________________________________________________________________________________
+// INSTRUCTIONS _____________________________________________________________________________________________
 
 void jumpInst(DecodedInst* inst ,CPU* cpu){ // overrites program counter with chosen instruction 
     int8_t destination = convertToInt(inst->operand1);
@@ -52,7 +52,7 @@ void jumpInst(DecodedInst* inst ,CPU* cpu){ // overrites program counter with ch
     }
 }
 
-void jumpCondInst(DecodedInst* inst, CPU* cpu){
+void jumpCondInst(DecodedInst* inst, CPU* cpu){ // conditional jmps
     switch(inst->opcodeNo){
         case JMP_ABV: if (!cpu->zeroFlag && !cpu->negativeFlag) jumpInst(inst,cpu); break;
         case JMP_NEG: if (cpu->negativeFlag) jumpInst(inst,cpu); break;
@@ -77,11 +77,11 @@ void storeInst(DecodedInst *inst, CPU *cpu){ // take thing from reg and store in
         input = cpu->gpRegs[atoi(regNo)];
     } else input = convertToInt(inst->operand2);
 
-    if ((destination < RAM_SIZE) && (destination > RAM_SIZE/2)) cpu->ram[destination][0] = input;
+    if ((destination < RAM_SIZE) && (destination > RAM_SIZE/2)) cpu->ram[destination][0] = input; // move to second half of ram
     else cpu->errorFlag = true;
 }
 
-void arithmeticInst(DecodedInst *inst, CPU *cpu){ 
+void arithmeticInst(DecodedInst *inst, CPU *cpu){  // arithmetic and logical ops
     ALUResults alu = {0};
     int8_t inputA;
     int8_t inputB;
