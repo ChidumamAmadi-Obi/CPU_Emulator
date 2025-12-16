@@ -7,17 +7,26 @@
 #include "execute.h"
 
 void initCtrlUnit(CPU *cpu){ // initializes cpu registers on start up
+    cpu->errorFlag=0; // clear all flags and regs
+    cpu->zeroFlag=0;
+    cpu->overflowFlag=0;
+    cpu->negativeFlag=0;
     cpu->programCounter=0;
-    for (int i=0; i<INST_LENGTH; i++){
-        cpu->gpRegs[i]=0;
-        cpu->instructionReg[i]=0;
-    }
+
+    cpu->isJumping=false;
+    cpu->isRunning=true;
+
+    for (int i=0; i<INST_LENGTH; i++){ cpu->instructionReg[i]=0;}
+    for (int i=0; i<CPU_REG_NO; i++) { cpu->gpRegs[i]=0;  }
 }
 
 void cpuFetch(CPU *cpu, bool printMode){ // fetches next instruction in memory and stores it into the inst reg
+    if (printMode) printf("%d:\t",cpu->programCounter);
     for (int i=0; i<INST_LENGTH; i++){
         cpu->instructionReg[i] = cpu->ram[cpu->programCounter][i];
-        if ((cpu->instructionReg[i] != 0) && printMode && (cpu->instructionReg[i] != ASCII_SEMI_COLON)) printf("%c",cpu->instructionReg[i]);
+        if ((cpu->instructionReg[i] != 0) && printMode && (cpu->instructionReg[i] != ASCII_SEMI_COLON)) {
+            printf("%c",cpu->instructionReg[i]);
+        }
     }
     if (printMode) printf("\n");
 }
@@ -26,6 +35,7 @@ CPUInstruction extractOpcode(CPU* cpu,DecodedInst *inst){
     if ( strcmp(inst->opcode,"HALT") == 0) return HALT;
     else if ( strcmp(inst->opcode,"STR") == 0) return STR;
     else if ( strcmp(inst->opcode,"LD") == 0) return LD;
+    else if ( strcmp(inst->opcode,"MOV") == 0) return MOV;
     else if ( strcmp(inst->opcode,"JMP") == 0) return JMP;
     else if ( strcmp(inst->opcode,"JMP_OFW") == 0) return JMP_OFW;
     else if ( strcmp(inst->opcode,"JMP_ZRO") == 0) return JMP_ZRO;
@@ -34,11 +44,12 @@ CPUInstruction extractOpcode(CPU* cpu,DecodedInst *inst){
 
     else if ( strcmp(inst->opcode,"ADD") == 0) return ADD; // arithmetic ops
     else if ( strcmp(inst->opcode,"SUB") == 0) return SUB;
+    else if ( strcmp(inst->opcode,"MUL") == 0) return MUL;
     else if ( strcmp(inst->opcode,"OR") == 0) return OR;
     else if ( strcmp(inst->opcode,"XOR") == 0) return XOR;
     else if ( strcmp(inst->opcode,"EQU") == 0) return EQU;
 
-    else cpu->errorFlag=true; return 0; // invalid opcode
+    else cpu->errorFlag=true; printError("\nERROR: INVALID OPCODE\n"); return 0; // invalid opcode
 }
 
 DecodedInst cpuDecode(CPU *cpu) { // parse and decode current instruction
@@ -63,7 +74,7 @@ DecodedInst cpuDecode(CPU *cpu) { // parse and decode current instruction
 
 void cpuExecute(DecodedInst *inst, CPU *cpu){
     switch(inst->opcodeNo){
-        case ADD: case SUB: case AND: case OR: case XOR: case EQU: //math ops
+        case ADD: case SUB: case MUL: case AND: case OR: case XOR: case EQU: //math ops
             arithmeticInst(inst,cpu); 
             break;
 
@@ -74,12 +85,14 @@ void cpuExecute(DecodedInst *inst, CPU *cpu){
 
         case STR: storeInst(inst,cpu); break; // mem ops
         case LD: loadInst(inst,cpu);break;
+        case MOV: movInst(inst,cpu); break;
         case HALT: cpu->isRunning = false; break; // end program        
         default: cpu->errorFlag = true; break;
     }
     
     if(cpu->isJumping) cpu->isJumping = false;  // reset jumping flag or inc pc
     else cpu->programCounter++;
+    cpu->metrics.executedInstructions++;
 }
 
 #endif

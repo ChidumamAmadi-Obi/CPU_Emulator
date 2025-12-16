@@ -8,8 +8,9 @@
 #include <string.h>
 
 // debugging
-#define PRINT_RAM_MODE 0 // 1: char, 2: int, 3:hex 
-#define PRINT_PC 0
+#define PRINT_RAM_MODE 0 // 0: dont print, 1: char, 2: int, 3:hex 
+#define PRINT_PC 0 // print each executed instruction
+#define PRINT_ERRORS 0
 
 // ascii stuff
 #define ASCII_SPACE 0x20
@@ -22,26 +23,35 @@
 #define MIN_NUMBER -128
 
 // memory constants
-#define RAM_SIZE 256
+#define RAM_SIZE 0xFF
 #define INST_LENGTH 24
+#define CPU_REG_NO 16
+
+#if PRINT_ERRORS == 1
+#define printError(x) printf(x)
+#else
+#define printError(x)
+#endif
 
 typedef enum{
-    STR=1,
-    LD=2,
-    JMP=3,
-    HALT=4,
+    STR,
+    LD,
+    JMP,
+    MOV,
+    HALT,
 
-    JMP_OFW=5,
-    JMP_ZRO=6,
-    JMP_NEG=7,
-    JMP_ABV=8, // jump if neither the zero or negative flags are true
+    JMP_OFW,
+    JMP_ZRO,
+    JMP_NEG,
+    JMP_ABV, // jump if neither the zero or negative flags are true
 
-    ADD=9,
-    SUB=10,
-    AND=11,
-    OR=12,
-    XOR=13,
-    EQU=14,
+    ADD,
+    SUB,
+    MUL,
+    AND,
+    OR,
+    XOR,
+    EQU,
 }CPUInstruction;
 typedef enum{
     OP_ADD,              
@@ -64,21 +74,34 @@ typedef enum{
     OP_MULT,             
 }ALUOperations;
 typedef enum{ // for visualizing sata in ram
-    NONE,
+    NONE=0,
     CHAR,
     INTEGER,
     HEX
 }MemPrintModes;
 
+typedef struct{
+    uint32_t cycles;
+    uint32_t executedInstructions;
+}Preformance;
 typedef struct{ // alu results
     int8_t output;
     int16_t tempResult;
     bool carryFlag;
     bool errorFlag;
 }ALUResults;
+typedef struct{ // parsed instruction
+    CPUInstruction opcodeNo;
+    char*opcode;
+    char*operand1;
+    char*operand2;
+    char*operand3;
+}DecodedInst;
 typedef struct{
+    ALUResults alu;
+    Preformance metrics;
     uint8_t instructionReg[INST_LENGTH];
-    int8_t gpRegs[16];
+    int8_t gpRegs[CPU_REG_NO];
     int8_t ram[RAM_SIZE][INST_LENGTH]; //2d ram unconventional but oh well 
     uint8_t programCounter;
 
@@ -90,13 +113,7 @@ typedef struct{
     bool isRunning; // cpu status flags
     bool isJumping; // keep track of jmp so pc doesnt accidently inc twice
 }CPU;
-typedef struct{ // parsed instruction
-    CPUInstruction opcodeNo;
-    char*opcode;
-    char*operand1;
-    char*operand2;
-    char*operand3;
-}DecodedInst;
+
 
 #endif
 
