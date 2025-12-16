@@ -6,12 +6,14 @@
 #include "memory.h"
 #include "control_unit.h"
 
-void initCPU(CPU *cpu){ 
-    initMemory(cpu); 
-    initCtrlUnit(cpu);
+void initCPU(CPU *cpu){ // on startup...
     loadProgram(cpu);
     cpu->isRunning = true;
-    cpu->errorFlag = false;    
+}
+
+void resetCPU(CPU *cpu){ // (in progress) on key press cpu will be reset...
+    clearRAM(cpu);
+    initCtrlUnit(cpu);
 }
 
 void runCPU(CPU *cpu){ // fetch decode execute
@@ -19,19 +21,19 @@ void runCPU(CPU *cpu){ // fetch decode execute
 
     cpuFetch(cpu,PRINT_PC);
     inst = cpuDecode(cpu);
-    cpuExecute(&inst,cpu);        
+    cpuExecute(&inst,cpu);
+    cpu->metrics.cycles++; // counts each cycle        
+}
+
+void debugRegisters(CPU*cpu){
+    for (int i=0; i<CPU_REG_NO; i++){
+        printf("\nREG %d: %d",i,cpu->gpRegs[i]);
+    }
 }
 
 void debugCPU(CPU *cpu){
     debugRAM(PRINT_RAM_MODE,cpu);
-
-    printf("Zero: %d ",cpu->zeroFlag); 
-    printf("\nAbv:  %d ",(!cpu->negativeFlag&&!cpu->zeroFlag)); 
-    printf("\nNeg:  %d ",cpu->negativeFlag); 
-    printf("\nOvf:  %d ",cpu->overflowFlag); 
-    printf("\nError:  %d ",cpu->errorFlag); 
-    printf("\nReg 1:  %d ",cpu->gpRegs[1]); 
+    // more debugging here......
 }
-
 
 #endif
