@@ -8,7 +8,7 @@
 #include <string.h>
 
 // debugging
-#define PRINT_RAM_MODE 0 // 0: dont print, 1: char, 2: int, 3:hex 
+#define PRINT_RAM_MODE 1 // 0: dont print, 1: char, 2: int, 3:hex 
 #define PRINT_PC 0 // print each executed instruction
 #define PRINT_ERRORS 0
 

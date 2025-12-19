@@ -1,0 +1,7 @@
+;EXAMPLE ASM
+;PUT CODE TO RUN ON CPU HERE
+LD r0 5; 
+LD r1 1; 
+MUL r1 r1 r0; 
+STR *0xFE r1;
+HALT;
