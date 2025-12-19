@@ -14,7 +14,13 @@ Lightweight, modular 8-bit CPU emulator written in C for fun to explore computer
  * Configurable debug output (RAM view, PC tracing, error logging)
  * Execution metrics
 
-<img width="570" height="704" alt="image" src="https://github.com/user-attachments/assets/ee4ef77e-c874-47b1-b37c-575b90b6fa53" />
+### Block Diagram
+<img width="515" height="530" alt="image" src="https://github.com/user-attachments/assets/ec21b225-f742-4e39-9723-24ad19e1f3b4" />
 
+### Future Improvements
+ - Simple Assembler Program
+ - State Operations
+ - Better Handling of edge cases
+ - Transition from 2D RAM to 1D
 
 
