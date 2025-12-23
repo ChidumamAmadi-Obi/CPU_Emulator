@@ -5,9 +5,9 @@ int main(void) {
     initCPU(&cpu);
     while (cpu.isRunning) {
         runCPU(&cpu);
-    } debugCPU(&cpu);
-
-    printf("\nNumber of cycles: %d",cpu.metrics.cycles);
+    } 
+    debugCPU(&cpu);
     debugRegisters(&cpu);
+    printf("\nPROGRAM COMPLETED IN %d CYCLES",cpu.metrics.cycles);
     return 0;
 }

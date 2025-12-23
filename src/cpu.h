@@ -27,7 +27,7 @@ void runCPU(CPU *cpu){ // fetch decode execute
 
 void debugRegisters(CPU*cpu){
     for (int i=0; i<CPU_REG_NO; i++){
-        printf("\nREG %d: %d",i,cpu->gpRegs[i]);
+        printf("\nREG %d -> %d",i,cpu->gpRegs[i]);
     }
 }
 
