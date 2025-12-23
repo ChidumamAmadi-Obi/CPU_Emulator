@@ -34,7 +34,7 @@ void loadProgram(CPU *cpu){                         // loads program from extern
             delComment = false;  // Reset comment flag for next line
             hasData=false;
             newLine=true;
-        } else if (ch == ASCII_SPACE && newLine) { //trim whitespace
+        } else if (ch == ASCII_SPACE && newLine) { // trim whitespace
         } else {
             if (ch == ASCII_SEMI_COLON){
                 if (!delComment) { // deletes both inline and whole line comments

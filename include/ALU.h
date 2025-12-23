@@ -28,8 +28,7 @@ bool detectOverflow(int8_t inputA, int8_t inputB, ALUOperations operation, CPU* 
         int8_t negB = ~inputB + 1;  // get the Two's complement of b (binary representation of a negative number)
         bool signNegB = (negB & MSB) != 0; // find the dign of the two's comp of b
         return (signA == signNegB) && (signA != signR);
-    } else if (operation == OP_MULT) { // if multiplying
-        return (cpu->alu.tempResult > 127) || (cpu->alu.tempResult < MIN_NUMBER);
+    } else if (operation == OP_MULT) { return (cpu->alu.tempResult > 127) || (cpu->alu.tempResult < MIN_NUMBER);
     } else return false;   
 }
 

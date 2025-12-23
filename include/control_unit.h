@@ -1,6 +1,8 @@
 #ifndef CPU_CTRL_UNIT
 #define CPU_CTRL_UNIT
 
+// Control Unit
+
 #include "config.h"
 #include "ALU.h"
 #include "memory.h"
@@ -23,8 +25,8 @@ void initCtrlUnit(CPU *cpu){ // initializes cpu registers on start up
 void cpuFetch(CPU *cpu, bool printMode){ // fetches next instruction in memory and stores it into the inst reg
     if (printMode) printf("%d:\t",cpu->programCounter);
     for (int i=0; i<INST_LENGTH; i++){
-        cpu->instructionReg[i] = cpu->ram[cpu->programCounter][i];
-        if ((cpu->instructionReg[i] != 0) && printMode && (cpu->instructionReg[i] != ASCII_SEMI_COLON)) {
+        cpu->instructionReg[i] = cpu->ram[cpu->programCounter][i]; // read current instruction
+        if ((cpu->instructionReg[i] != 0) && printMode && (cpu->instructionReg[i] != ASCII_SEMI_COLON)) { // print if needed
             printf("%c",cpu->instructionReg[i]);
         }
     }
@@ -48,6 +50,7 @@ CPUInstruction extractOpcode(CPU* cpu,DecodedInst *inst){
     else if ( strcmp(inst->opcode,"OR") == 0) return OR;
     else if ( strcmp(inst->opcode,"XOR") == 0) return XOR;
     else if ( strcmp(inst->opcode,"EQU") == 0) return EQU;
+    else if ( strcmp(inst->opcode,"DIV") == 0) return DIV;
 
     else cpu->errorFlag=true; printError("\nERROR: INVALID OPCODE\n"); return 0; // invalid opcode
 }
@@ -68,13 +71,13 @@ DecodedInst cpuDecode(CPU *cpu) { // parse and decode current instruction
         decodedInst.operand2 = strtok(NULL, " ");
         decodedInst.operand3 = strtok(NULL, " ");
     }
-    decodedInst.opcodeNo = extractOpcode(cpu,&decodedInst);
+    decodedInst.opcodeNo = extractOpcode(cpu,&decodedInst); // put parsed inst into struct
     return decodedInst;
 }
 
 void cpuExecute(DecodedInst *inst, CPU *cpu){
     switch(inst->opcodeNo){
-        case ADD: case SUB: case MUL: case AND: case OR: case XOR: case EQU: //math ops
+        case ADD: case SUB: case MUL: case DIV: case AND: case OR: case XOR: case EQU: //math ops
             arithmeticInst(inst,cpu); 
             break;
 
@@ -92,7 +95,7 @@ void cpuExecute(DecodedInst *inst, CPU *cpu){
     
     if(cpu->isJumping) cpu->isJumping = false;  // reset jumping flag or inc pc
     else cpu->programCounter++;
-    cpu->metrics.executedInstructions++;
+    cpu->metrics.executedInstructions++; // count total cpu cycles
 }
 
 #endif

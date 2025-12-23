@@ -52,6 +52,7 @@ typedef enum{
     OR,
     XOR,
     EQU,
+    DIV
 }CPUInstruction;
 typedef enum{
     OP_ADD,              
@@ -80,7 +81,7 @@ typedef enum{ // for visualizing sata in ram
     HEX
 }MemPrintModes;
 
-typedef struct{
+typedef struct{ // records metrics
     uint32_t cycles;
     uint32_t executedInstructions;
 }Preformance;
@@ -97,12 +98,12 @@ typedef struct{ // parsed instruction
     char*operand2;
     char*operand3;
 }DecodedInst;
-typedef struct{
+typedef struct{ // CPU variables
     ALUResults alu;
     Preformance metrics;
     uint8_t instructionReg[INST_LENGTH];
     int8_t gpRegs[CPU_REG_NO];
-    int8_t ram[RAM_SIZE][INST_LENGTH]; //2d ram unconventional but oh well 
+    int8_t ram[RAM_SIZE][INST_LENGTH]; // 2d ram unconventional but oh well 
     uint8_t programCounter;
 
     bool errorFlag; // alu flags
@@ -110,7 +111,7 @@ typedef struct{
     bool overflowFlag;
     bool negativeFlag;
 
-    bool isRunning; // cpu status flags
+    bool isRunning;
     bool isJumping; // keep track of jmp so pc doesnt accidently inc twice
 }CPU;
 
