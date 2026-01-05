@@ -20,6 +20,10 @@ Lightweight, modular 8-bit CPU emulator written in C for fun to explore computer
 ### Block Diagram
 <img width="515" height="530" alt="image" src="https://github.com/user-attachments/assets/ec21b225-f742-4e39-9723-24ad19e1f3b4" />
 
+### Example Output Snippet (Factorial Program)
+<img width="472" height="689" alt="image" src="https://github.com/user-attachments/assets/741980cd-d9d6-4c22-9b76-1f6c8b03d38c" />
+
+
 ### Future Improvements
  - Simple Assembler Program
  - Support use of labels and macros
