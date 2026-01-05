@@ -78,6 +78,6 @@ void debugRAM(MemPrintModes mode, CPU *cpu){ // prints contents of RAM
     }
 }
 
-// reference https://www.youtube.com/watch?v=Ui6QyzcD3_E
+// for reference https://www.youtube.com/watch?v=Ui6QyzcD3_E
 
 #endif

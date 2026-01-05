@@ -8,7 +8,7 @@
 #include <string.h>
 
 // debugging
-#define PRINT_RAM_MODE 1 // 0: dont print, 1: char, 2: int, 3:hex 
+#define PRINT_RAM_MODE 0 // 0: dont print, 1: char, 2: int, 3:hex 
 #define PRINT_PC 0 // print each executed instruction
 #define PRINT_ERRORS 0
 
@@ -74,7 +74,7 @@ typedef enum{
     OP_DIVIDE,           
     OP_MULT,             
 }ALUOperations;
-typedef enum{ // for visualizing sata in ram
+typedef enum{ // for visualizing data in ram
     NONE=0,
     CHAR,
     INTEGER,
@@ -115,7 +115,6 @@ typedef struct{ // CPU variables
     bool isJumping; // keep track of jmp so pc doesnt accidently inc twice
 }CPU;
 
-
 #endif
 
-// https://youtu.be/rdKX9hzA2lU?si=gsVF8THibba89D1V 
+// for reference https://youtu.be/rdKX9hzA2lU?si=gsVF8THibba89D1V 
