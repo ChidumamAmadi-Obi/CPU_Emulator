@@ -6,6 +6,30 @@
 #include "memory.h"
 #include "control_unit.h"
 
+void printInst(CPU *cpu){
+    for (int i=0; i<INST_LENGTH; i++){
+        if ((cpu->instructionReg[i] != 0) && (cpu->instructionReg[i] != ASCII_SEMI_COLON)) { // print if needed
+            printf("%c",cpu->instructionReg[i]);
+        } 
+    }
+    printf("\n");
+}
+
+void visualizeSteps(CPU *cpu){
+    printf("___________________________________\n");
+    printf("   PROGRAM COUNTER    |  %d\n",cpu->programCounter); 
+    printf(" INSTRUCTION REGISTER |  "); printInst(cpu);
+    printf("      ZERO FLAG       |  %d\n",cpu->zeroFlag);
+    printf("    OVERFLOW FLAG     |  %d\n",cpu->overflowFlag);
+    printf("    NEGATIVE FLAG     |  %d\n",cpu->negativeFlag);
+    printf("     ERROR FLAG       |  %d\n",cpu->errorFlag);
+    printf("___________________________________\n");
+    printf("R0  | %d\nR1  | %d\nR2  | %d\nR3  | %d\nR4  | %d\nR5  | %d\nR6  | %d\nR7  | %d\nR8  | %d\nR9  | %d\nR10 | %d\nR11 | %d\nR12 | %d\nR13 | %d\nR14 | %d\nR15 | %d\n",
+    cpu->gpRegs[0],cpu->gpRegs[1],cpu->gpRegs[2],cpu->gpRegs[3],cpu->gpRegs[4],cpu->gpRegs[5],cpu->gpRegs[6],cpu->gpRegs[7],
+    cpu->gpRegs[8],cpu->gpRegs[9],cpu->gpRegs[10],cpu->gpRegs[11],cpu->gpRegs[12],cpu->gpRegs[13],cpu->gpRegs[14],cpu->gpRegs[15]);
+    printf("___________________________________\n");
+}
+
 void initCPU(CPU *cpu){ // on startup...
     loadProgram(cpu);
     cpu->isRunning = true;
@@ -22,6 +46,7 @@ void runCPU(CPU *cpu){ // fetch decode execute
     cpuFetch(cpu,PRINT_PC);
     inst = cpuDecode(cpu);
     cpuExecute(&inst,cpu);
+    visualizeSteps(cpu);
     cpu->metrics.cycles++; // counts each cycle        
 }
 
