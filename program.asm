@@ -14,5 +14,6 @@ SUB r0 r0 1; decriment contents of r0
 JMP_ZRO 6; if result is zero, end program
 JMP 2; jump to LOOP
 
+; END: 6
 STR *0xFE r1; store result in RAM location 0xFE
 HALT; end program
