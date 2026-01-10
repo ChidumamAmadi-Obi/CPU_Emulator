@@ -41,7 +41,7 @@ Lightweight, modular 8-bit CPU emulator written in C for fun to explore computer
 | JMP_ABV | `JMP_ABV addr` | Jump if both negative and zero flags are NOT set |
 
 ### Run on Your Machine
-   **1.** Clone Repo <br>
+   **1.** Clone Repo and navigate to the emulator directory <br>
    **2.** Build and run with default program
    ``` bash
     gcc -Iinclude -o emulator src/main.c
