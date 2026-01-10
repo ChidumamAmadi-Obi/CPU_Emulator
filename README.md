@@ -1,21 +1,22 @@
 # 8-Bit CPU Emulator in C
-Lightweight, modular 8-bit CPU emulator written in C for fun to explore computer architecture, instruction execution, and low-level programming.
-
- * Full fetch-decode-execute pipeline
- * 16 general-purpose registers
- * 255 bytes of RAM (split into ROM and writable memory)
- * ALU suppoerting arithmetic and logic operations
- * Instruction set including load/store, jumps, arithmetic, and conditional branching
- * Configurable debugging woth compile-time flags
- * Support for *rX pointer syntax
- * Support for indirect addressing
+Lightweight, modular 8-bit CPU emulator with a multiple-pass assembler written in C/C++ for fun to explore computer architecture, instruction execution, and low-level programming.
 
 ### Features 
+**CPU Emulator**
  * Signed 8-bit arithmetic with overflow detection
  * Support for multiple number formats (decimal, hex, binary)
  * Program loading from external assembly file ```(program.asm)```
  * Configurable debug output (RAM view, PC tracing, error logging)
  * Execution metrics
+
+**Assembler (in progress)**
+  * Two-pass assembly process (symbol resolution, code generation)
+  * Label support with forward referencing
+  * Multiple number formats (decimal, hex, binary)
+  * Pointer syntax (`*rX` for register-indirect, `*0xFE` for absolute)
+  * Syntax validation
+  * Robust Error Reporting
+  * Symbol table generation for debug visibility
 
 ### Block Diagram
 <img width="515" height="530" alt="image" src="https://github.com/user-attachments/assets/ec21b225-f742-4e39-9723-24ad19e1f3b4" />
@@ -76,10 +77,15 @@ Lightweight, modular 8-bit CPU emulator written in C for fun to explore computer
 - **_Bubble Sort:_** (coming soon)
 - **Average CPI:** 1 cycle per instruction
 
-### Future Improvements
- - Simple Assembler Program
- - Support use of labels and macros
- - State Operations
- - Stack Operations
- - Better Handling of edge cases
- - Transition from 2D RAM to 1D
+### Assembler Roadmap
+- [x] Load program
+- [x] Impliment Tokenizer & Symbol Table
+- [ ] Impliment First and Second Pass
+- [ ] Macro support
+
+### Roadmap & Future Improvements
+ - [ ] Transition CPU to from unconventional & slow string processing to binary
+ - [ ] Better Handling of edge cases
+ - [ ] State & Stack Operations
+ - [ ] Subroutine support
+ - [ ] Transition from 2D RAM to 1D
