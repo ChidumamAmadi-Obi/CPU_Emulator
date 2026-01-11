@@ -14,7 +14,7 @@ Lightweight, modular 8-bit CPU emulator with a multiple-pass assembler written i
   * Label support with forward referencing
   * Multiple number formats (decimal, hex, binary)
   * Pointer syntax (`*rX` for register-indirect, `*0xFE` for absolute)
-  * Syntax validation
+  * Syntax validation with error location
   * Robust Error Reporting
   * Symbol table generation for debug visibility
 
@@ -41,7 +41,7 @@ Lightweight, modular 8-bit CPU emulator with a multiple-pass assembler written i
 | JMP_NEG | `JMP_NEG addr` | Jump if negative flag set |
 | JMP_ABV | `JMP_ABV addr` | Jump if both negative and zero flags are NOT set |
 
-### Run on Your Machine
+### How to Run on Your Machine
    **1.** Clone Repo and navigate to the emulator directory <br>
    **2.** Build and run with default program
    ``` bash
@@ -77,10 +77,19 @@ Lightweight, modular 8-bit CPU emulator with a multiple-pass assembler written i
 - **_Bubble Sort:_** (coming soon)
 - **Average CPI:** 1 cycle per instruction
 
+### CPU Roadmap
+- [x] Create ALU that handles signed arithmetic
+- [x] Create RAM & ROM and load program
+- [x] Create Control Unit
+- [x] Can Execute Instructions
+- [x] Track Preformance Metrics 
+
 ### Assembler Roadmap
 - [x] Load program
 - [x] Impliment Tokenizer & Symbol Table
-- [ ] Impliment First and Second Pass
+- [x] Impliment First Pass
+- [ ] Impliment Second Pass
+- [ ] Generate Binary File
 - [ ] Macro support
 
 ### Roadmap & Future Improvements
