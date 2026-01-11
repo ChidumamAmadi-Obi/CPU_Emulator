@@ -1,14 +1,14 @@
-// C-STYLE CPP FOR ASSEMBLER :]
+// C-STYLE CPP FOR MULTIPLE-PASS ASSEMBLER :]
 
 #include "config.hpp"
-#include "load_program.hpp"
 #include "debug_asm.hpp"
+#include "assembler.hpp"
 
 int main() {
     Assembler assembler;
-    loadProgram(&assembler);
+    assemble(&assembler);
 
     if (SHOW_ERRORS) inspectErrors(&assembler); 
-
+    if (SHOW_SYMBOL_TABLE) inspectSymbolTable(&assembler);
     return 0;
 }
