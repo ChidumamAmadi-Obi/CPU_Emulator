@@ -77,24 +77,26 @@ Lightweight, modular 8-bit CPU emulator with a multiple-pass assembler written i
 - **_Bubble Sort:_** (coming soon)
 - **Average CPI:** 1 cycle per instruction
 
-### CPU Roadmap
+### Roadmaps
+#### CPU Roadmap
 - [x] Create ALU that handles signed arithmetic
 - [x] Create RAM & ROM and load program
 - [x] Create Control Unit
 - [x] Can Execute Instructions
 - [x] Track Preformance Metrics 
+- [ ] State & Stack Operations
+- [ ] Subroutine support
 
-### Assembler Roadmap
+#### Assembler Roadmap
 - [x] Load program
 - [x] Impliment Tokenizer & Symbol Table
 - [x] Impliment First Pass
-- [ ] Impliment Second Pass
+- [x] Impliment Second Pass
 - [ ] Generate Binary File
 - [ ] Macro support
 
-### Roadmap & Future Improvements
- - [ ] Transition CPU to from unconventional & slow string processing to binary
- - [ ] Better Handling of edge cases
- - [ ] State & Stack Operations
- - [ ] Subroutine support
+#### Future Improvements
+ - [ ] Modify Control Unit to decode & process binary instructions
  - [ ] Transition from 2D RAM to 1D
+ - [ ] Run Bubble sorting Algorithm on CPU
+ - [ ] Better Handling of edge cases
