@@ -8,16 +8,24 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-using namespace std;
-
+// configure 
 #define SHOW_ERRORS 1
-#define SHOW_SYMBOL_TABLE 1
+#define SHOW_SYMBOL_TABLE 0
 #define DEBUG_RAW_ASM 0
 #define DEBUG_TOKENIZER 0
-#define DEBUG_BIN_OUT 0
+#define DEBUG_BIN_OUT 1
 
 #define DEBUG_FIRST_PASS 0
 #define DEBUG_SECOND_PASS 0
+
+// macros
+#define INVALID -1
+#define INVALID_LITERAL -999
+#define UNDEFINED_LABEL -2
+
+using namespace std;
+
+//_________________________________________________________________________________________________
 
 typedef enum{
     STR,
@@ -80,10 +88,14 @@ typedef enum{ // if error program should stop immediatly
     BIN_GEN_ERROR
 }ProgramErrors;
 
+//_________________________________________________________________________________________________
+
 typedef struct{
     string rawAsm = "";
     string invalidToken="";
+    string invalidLabel="";
     vector <string> tokens;
+    vector <uint8_t> machineCode;
     unordered_map<string,int8_t> symbolTable; 
 }Program;
 typedef struct{
@@ -143,6 +155,12 @@ typedef struct{
         {"*r15",PTR_R15}};
 }Maps;
 
+/*
+done
+pass 2, generate binary code, delete labels, replace labels w locations
+map mnemonics to thier binary counterparts
+
+*/
 
 /*
 https://www.geeksforgeeks.org/compiler-design/introduction-of-assembler/

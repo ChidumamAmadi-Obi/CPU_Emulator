@@ -30,3 +30,15 @@ void loadProgram(Assembler *assembler){ // loads program from external file and 
     }
     f.close();
 }
+
+void exportMachineCode(Assembler *assembler){
+    if(assembler->errorCode!=NONE) return;
+    ofstream mc("program.txt");
+    if (!mc.is_open()) {
+        assembler->errorCode = FILE_ERROR;
+        return;
+    }
+    // write to file
+    
+    mc.close();
+}

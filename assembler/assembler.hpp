@@ -1,10 +1,8 @@
 #pragma once
 
 #include "config.hpp"
-#include "load_program.hpp"
+#include "handle_file.hpp"
 #include "translation_helpers.hpp"
-
-//_________________________________________________________________________________________________
 
 void tokenize(Assembler *assembler){ // splits program up into individual "tokens" and stores into vector
     if(assembler->errorCode!=NONE) return; // exit if error
@@ -64,7 +62,7 @@ void passOne(Assembler *assembler) { // check syntax and get labels w their loca
 
         } else if (isLabel(pastToken)) {// if undefined label, will check if label actually exists in second pass
             gSyntax=true; 
-
+            assembler->program.symbolTable[token]=UNDEFINED_LABEL;
         }
         
         if (!gSyntax) {
@@ -75,24 +73,64 @@ void passOne(Assembler *assembler) { // check syntax and get labels w their loca
         if (printOut)printf("OK");
         pastToken=token;
     }
+    // also calculate the amount of bytes in code
 }
-void passTwo(Assembler *assembler){
-   if(assembler->errorCode!=NONE) return;
+void passTwo(Assembler *assembler){ // generates binary and replaces symbols with their values
+    areLabelsDefined(assembler); // check if all labels r defined before second pass
+    
+    if(assembler->errorCode!=NONE) return;
+    bool printOut=false; 
+    int IndexM=0; // machine code index
+    string verifiedToken;
+    int16_t literal;
+    int8_t location;
+    int8_t bin;
 
-    /*
-    1 map mnemonics to opcodes and operands
-    2 replace labels w addresses from symbol tables
-    3 gen binary out
-    4 write bin to file
-    */
+    if (DEBUG_SECOND_PASS) printOut=true;
+    if(printOut) printf("GENERATING BIN CODE: ");
+
+    for (int i=0; i<assembler->program.tokens.size(); i++) { 
+        verifiedToken=assembler->program.tokens[i];
+        if (verifiedToken.back() == ':') continue; // if label dont add to machine code
+
+        location=getLabelLocation(assembler,verifiedToken); // check if token is a label and get location
+        bin=mapMnemonics(assembler,verifiedToken); // check if token is mnemonic and map to binary
+        literal=handleInt(assembler,verifiedToken); // check if token is literal and convert to an integer
+
+        if (bin == INVALID && location == INVALID && literal == INVALID_LITERAL) { // if token is neither a mnemonic or defined label send error
+            assembler->errorCode=BIN_GEN_ERROR;
+            return;
+        }        
+
+        // if a valid token add binary to machine code verctor 
+        if (location != INVALID) assembler->program.machineCode.push_back(location);
+        else if (bin != INVALID)  assembler->program.machineCode.push_back((uint8_t)bin); 
+        else if (literal != INVALID_LITERAL) assembler->program.machineCode.push_back((uint8_t)literal);    
+        if (printOut) printf("%s -> 0x%02X\n",assembler->program.tokens[i].c_str(), assembler->program.machineCode[IndexM]);
+        IndexM++;        
+
+    }
+    for (auto& pair : assembler->program.symbolTable) { // verify that all labels are defined
+        if (pair.second == UNDEFINED_LABEL) {  // -1 means label was referenced but never defined
+            assembler->errorCode = SYMBOL_ERROR;
+            assembler->program.invalidLabel = pair.first;
+            return;
+        }
+    }
 }
+
+//_________________________________________________________________________________________________
 
 void assemble(Assembler *assembler){ // runs assembler
     loadProgram(assembler);
     tokenize(assembler);
     
     passOne(assembler);
-    //passTwo(assembler);
+    passTwo(assembler);
+
+    // exportMachineCode(assembler);
+
+    // write to bin file after passes
     
     // everything else blah blah
     /*

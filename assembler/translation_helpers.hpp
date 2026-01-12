@@ -2,6 +2,7 @@
 
 #include "config.hpp"
 
+// FOR FIRST PASS _________________________________________________________________________________________________
 bool isLabel(string pastToken){// checks if token is an nudefined label. else returns false
     if((pastToken.compare("JMP") == 0 ||
         pastToken.compare("JMP_ABV") == 0 ||
@@ -47,12 +48,15 @@ bool isNumber(string token) { // checks if number is in desired format, else ret
     }
     return false;
 }
-int8_t handleInt(string token, Assembler *assembler){// handles binary and hex numbers
+
+// FOR SECOND PASS ________________________________________________________________________________________________
+int16_t handleInt(Assembler *assembler,string token){ // checks for correct literal format, and returns interger
+    if (token.back() == ':') return -1; // if label return
     if (token.front() =='*'){ // " * " symbolize memory locations in ram
-        if ((token[1] == '0') && (token[2] == 'x','X')) {
+        if ((token[1] == '0') && (token[2] == 'x' || token[2] == 'X')) {
             long decNumberLong = strtol(token.c_str()+1, NULL, 16);
             return (int8_t)decNumberLong;
-        } else if (token[1] == 'b','B') {
+        } else if (token[1] == 'b'  || token[1] == 'B') {
             long decNumberLong = strtol(token.c_str()+2, NULL, 2);
             return (int8_t)decNumberLong;
         } else {
@@ -60,22 +64,37 @@ int8_t handleInt(string token, Assembler *assembler){// handles binary and hex n
             return (int8_t)decNumberLong;
         }
     } else {
-        if ((token.front() == '0') && (token[1] == 'x','X')) {
+        if ((token.front() == '0') && (token[1] == 'x' || token[1] == 'X')) {
             long decNumberLong = strtol(token.c_str(), NULL, 16);
             return (int8_t)decNumberLong;
-        } else if (token.front() == 'b','B') {
+        } else if (token.front() == 'b' || token.front() == 'B') {
             long decNumberLong = strtol(token.c_str()+1, NULL, 2);
             return (int8_t)decNumberLong;
         } else { // just a normal number
             long decNumberLong = strtol(token.c_str(), NULL, 10);
             return (int8_t)decNumberLong;
         }
-    }
+    } return INVALID_LITERAL; // if invalid
 }
-
-void generateBin(Assembler *assembler){
-    if(assembler->errorCode!=NONE) return;
-
-    /*assembler->errorCode = BIN_GEN_ERROR;
-    return;*/ 
+int8_t getLabelLocation(Assembler *assembler, string label) { // returns location of label to be replaced
+    if(assembler->program.symbolTable.find(label) == assembler->program.symbolTable.end()){ 
+        return INVALID;
+    } return assembler->program.symbolTable[label];
+}
+int8_t mapMnemonics(Assembler *assembler, string token){
+    static Maps gmaps;
+    if (gmaps.mnemonicMap.find(token) != gmaps.mnemonicMap.end()) { // if valid mnemonic
+        return (int8_t)gmaps.mnemonicMap[token];
+    } 
+    if (gmaps.regMap.find(token) != gmaps.regMap.end()) { // if valid reg number
+        return (int8_t)gmaps.regMap[token];
+    } return INVALID; // if not found return -1 error
+}
+void areLabelsDefined(Assembler *assembler){
+    for (auto& pair : assembler->program.symbolTable) { // verify that all labels are defined
+        if (pair.second == UNDEFINED_LABEL) {  // -1 means label was referenced but never defined
+            assembler->errorCode = SYMBOL_ERROR;
+            assembler->program.invalidLabel = pair.first;
+        }
+    }return;
 }
