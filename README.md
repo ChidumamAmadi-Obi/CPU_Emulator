@@ -2,7 +2,7 @@
 Lightweight, modular 8-bit CPU emulator with a multiple-pass assembler written in C/C++ for fun to explore computer architecture, instruction execution, and low-level programming.
 
 ### Assembler Demo
-https://github.com/user-attachments/assets/cf7a389e-5e2a-4de5-a3f8-8bcd5c390165
+https://github.com/user-attachments/assets/024d12c7-3525-45a2-bc83-52e91714f8e2
 
 ### Features 
 **CPU Emulator**
