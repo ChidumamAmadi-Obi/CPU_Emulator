@@ -1,6 +1,9 @@
 # 8-Bit CPU Emulator in C
 Lightweight, modular 8-bit CPU emulator with a multiple-pass assembler written in C/C++ for fun to explore computer architecture, instruction execution, and low-level programming.
 
+### Assembler Demo
+https://github.com/user-attachments/assets/cf7a389e-5e2a-4de5-a3f8-8bcd5c390165
+
 ### Features 
 **CPU Emulator**
  * Signed 8-bit arithmetic with overflow detection
@@ -92,7 +95,7 @@ Lightweight, modular 8-bit CPU emulator with a multiple-pass assembler written i
 - [x] Impliment Tokenizer & Symbol Table
 - [x] Impliment First Pass
 - [x] Impliment Second Pass
-- [ ] Generate Binary File
+- [x] Generate Binary File
 - [ ] Macro support
 
 #### Future Improvements
