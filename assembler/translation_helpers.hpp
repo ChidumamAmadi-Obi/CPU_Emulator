@@ -3,7 +3,7 @@
 #include "config.hpp"
 
 // FOR FIRST PASS _________________________________________________________________________________________________
-bool isLabel(string pastToken){// checks if token is an nudefined label. else returns false
+bool isLabel(string pastToken){ // checks if token is an nudefined label. else returns false
     if((pastToken.compare("JMP") == 0 ||
         pastToken.compare("JMP_ABV") == 0 ||
         pastToken.compare("JMP_ZRO") == 0 ||
@@ -95,6 +95,7 @@ void areLabelsDefined(Assembler *assembler){
         if (pair.second == UNDEFINED_LABEL) {  // -1 means label was referenced but never defined
             assembler->errorCode = SYMBOL_ERROR;
             assembler->program.invalidLabel = pair.first;
+            return;
         }
-    }return;
+    }
 }

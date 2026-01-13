@@ -7,32 +7,33 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <windows.h> // for pretty terminal colors
+
 
 // configure 
 #define SHOW_ERRORS 1
-#define SHOW_SYMBOL_TABLE 0
+#define SHOW_SYMBOL_TABLE 1
+#define SHOW_GENERATED_BINARY 1
 #define DEBUG_RAW_ASM 0
 #define DEBUG_TOKENIZER 0
-#define DEBUG_BIN_OUT 1
 
 #define DEBUG_FIRST_PASS 0
 #define DEBUG_SECOND_PASS 0
 
 // macros
 #define INVALID -1
+#define UNDEFINED_LABEL -1
 #define INVALID_LITERAL -999
-#define UNDEFINED_LABEL -2
 
 using namespace std;
 
 //_________________________________________________________________________________________________
-
 typedef enum{
+    HALT,    
     STR,
     LD,
     JMP,
     MOV,
-    HALT,
     JMP_OFW,
     JMP_ZRO,
     JMP_NEG,
@@ -83,13 +84,30 @@ typedef enum{
 typedef enum{ // if error program should stop immediatly
     NONE,
     SYNTAX_ERROR,
-    FILE_ERROR,
+    LOADING_PROGRAM_ERROR,
+    EXPORTING_BINARY_ERROR,
     SYMBOL_ERROR,
     BIN_GEN_ERROR
 }ProgramErrors;
+typedef enum{
+    BLUE=1,
+    GREEN=2,
+    CYAN=3,
+    RED=4,
+    PURPLE=5,
+    DARK_YELLOW=6,
+    DEFAULT_WHITE=7,
+    GREY=8,
+    BRIGHT_BLUE=9,
+    BRIGHT_GREEN=10,
+    BRIGHT_CYAN=11,
+    BRIGHT_RED=12,
+    PINK=13,
+    YELLOW=14,
+    BRIGHT_WHITE=15,
+}TerminalColors;
 
 //_________________________________________________________________________________________________
-
 typedef struct{
     string rawAsm = "";
     string invalidToken="";
@@ -101,6 +119,7 @@ typedef struct{
 typedef struct{
     Program program;
     ProgramErrors errorCode = NONE;
+    HANDLE col = GetStdHandle(STD_OUTPUT_HANDLE); // for changing terminal colors
 }Assembler;
 typedef struct{
     unordered_map<string,Mnemonics> mnemonicMap = {
@@ -156,19 +175,19 @@ typedef struct{
 }Maps;
 
 /*
-done
-pass 2, generate binary code, delete labels, replace labels w locations
-map mnemonics to thier binary counterparts
+export to binary file
+changes colors of debuggin goutput
 
 */
 
 /*
 https://www.geeksforgeeks.org/compiler-design/introduction-of-assembler/
+https://www.geeksforgeeks.org/cpp/how-to-print-colored-text-in-c/
 
 1. + make lexer/tokenizer 
 2. + make symbol table
 3. + first pass ( calc instruction sizes & get label addresses in symbol table )
-4. get mnemonics int o machine code
-5. second pass ( replace mnemonics w opcodes & replace labels w acctual addresses )
-6. output bin/hex machine code to a file
+4. + get mnemonics int o machine code
+5. + second pass ( replace mnemonics w opcodes & replace labels w acctual addresses )
+6. + output bin/hex machine code to a file
 */

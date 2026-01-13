@@ -4,14 +4,13 @@
 #include "debug_asm.hpp"
 #include "assembler.hpp"
 
-int main() {
-
+int main() { 
     Assembler assembler;
     assemble(&assembler);
-
-    if (SHOW_ERRORS) inspectErrors(&assembler); 
+    
     if (SHOW_SYMBOL_TABLE) inspectSymbolTable(&assembler);
-    if (DEBUG_BIN_OUT) inspectBinary(&assembler);     
-
+    if (SHOW_GENERATED_BINARY) inspectBinary(&assembler);     
+    if (SHOW_ERRORS) inspectErrors(&assembler); 
+    
     return 0;
 }

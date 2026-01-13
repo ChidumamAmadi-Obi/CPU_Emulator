@@ -120,7 +120,6 @@ void passTwo(Assembler *assembler){ // generates binary and replaces symbols wit
 }
 
 //_________________________________________________________________________________________________
-
 void assemble(Assembler *assembler){ // runs assembler
     loadProgram(assembler);
     tokenize(assembler);
@@ -128,7 +127,7 @@ void assemble(Assembler *assembler){ // runs assembler
     passOne(assembler);
     passTwo(assembler);
 
-    // exportMachineCode(assembler);
+    exportMachineCode(assembler);
 
     // write to bin file after passes
     

@@ -6,11 +6,16 @@ void loadProgram(Assembler *assembler){ // loads program from external file and 
     ifstream f("program.asm");
     
     if (!f.is_open()) {
-        assembler->errorCode = FILE_ERROR;
+        assembler->errorCode = LOADING_PROGRAM_ERROR;
         return;
     }
 
     string line="";
+
+    if (!getline(f,line)) {
+        assembler->errorCode = LOADING_PROGRAM_ERROR;
+        return;
+    }
 
     while (getline(f, line)) {
         size_t firstNonSpace = line.find_first_not_of(" \t"); 
@@ -33,12 +38,18 @@ void loadProgram(Assembler *assembler){ // loads program from external file and 
 
 void exportMachineCode(Assembler *assembler){
     if(assembler->errorCode!=NONE) return;
-    ofstream mc("program.txt");
-    if (!mc.is_open()) {
-        assembler->errorCode = FILE_ERROR;
+
+    ofstream binOut("program.bin",ios::binary);
+
+    if (!binOut.is_open()) {
+        assembler->errorCode = EXPORTING_BINARY_ERROR;
         return;
+    } 
+
+    for (int i=0; i<assembler->program.machineCode.size(); i++) {
+        binOut.write((char*)&assembler->program.machineCode[i], sizeof(uint8_t));
     }
-    // write to file
-    
-    mc.close();
+
+    binOut.flush();
+    binOut.close();
 }
