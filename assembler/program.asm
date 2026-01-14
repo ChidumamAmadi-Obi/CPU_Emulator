@@ -1,4 +1,4 @@
-; TESTING TOKENIZER, FIRST PASS & LABEL SUPPORT
+; for testing assembler only, cant run on cpu yet :[
 
 ; FACTORIAL EXAMPLE
 LD r0 5; calculate 5!
@@ -12,4 +12,5 @@ LOOP:
 
 END:
     STR *0xFE r1; store result in RAM location 0xFE
+
     HALT; end program
