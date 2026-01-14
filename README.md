@@ -45,10 +45,12 @@ https://github.com/user-attachments/assets/024d12c7-3525-45a2-bc83-52e91714f8e2
 | JMP_ABV | `JMP_ABV addr` | Jump if both negative and zero flags are NOT set |
 
 ### How to Run on Your Machine
-   **1.** Clone Repo and navigate to the emulator directory <br>
-   **2.** Build and run with default program
+   **1.** Clone Repo <br>
+   **2.** Build and run CPU Emulator and Assembler with default program
    ``` bash
-    gcc -Iinclude -o emulator src/main.c
+    g++ -Iassembler/include -o assembler assembler/src/*.cpp
+    ./assembler
+    gcc -Iemulator/include -o emulator emulator/src/*.c  
     ./emulator.exe
    ```
    **3.** Modify ```program.asm``` to run your own assembly instructions 
@@ -59,18 +61,20 @@ https://github.com/user-attachments/assets/024d12c7-3525-45a2-bc83-52e91714f8e2
    LD r0 5; calculate 5!
    LD r1 1; temp
    
-   ; LOOP: 2
+   ; LOOP:
    MUL r1 r1 r0; multiply contents of r1 by r0
    SUB r0 r0 1; decriment contents of r0
    JMP_ZRO 6; if result is zero, jump to END
    JMP 2; jump to LOOP
    
-   ; END: 6
+   ; END:
    STR *0xFE r1; store result in RAM location 0xFE
    HALT; end program
    ```
-   ##### Example Output Snippet
-   <img width="472" height="689" alt="image" src="https://github.com/user-attachments/assets/741980cd-d9d6-4c22-9b76-1f6c8b03d38c" />
+   ##### Example CPU Emulator Output Snippet
+   <img width="472" height="689" alt="image" src="https://github.com/user-attachments/assets/741980cd-d9d6-4c22-9b76-1f6c8b03d38c" /> <br>
+   ##### Example Assembler Output Snippet With Labels Used
+   <img width="490" height="309" alt="image" src="https://github.com/user-attachments/assets/3eff521a-3bb1-4e23-8036-ed78af0a92b4" />
 
 ### Preformance
 - **_Fibonacci(8):_** 47 cycles, 21 result 
@@ -102,4 +106,4 @@ https://github.com/user-attachments/assets/024d12c7-3525-45a2-bc83-52e91714f8e2
  - [ ] Modify Control Unit to decode & process binary instructions
  - [ ] Transition from 2D RAM to 1D
  - [ ] Run Bubble sorting Algorithm on CPU
- - [ ] Better Handling of edge cases
+ - [ ] Better Handling of edge cases on the CPU emulator
