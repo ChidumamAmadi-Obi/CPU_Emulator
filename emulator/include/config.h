@@ -166,23 +166,4 @@ typedef struct{ // CPU variables
     bool isJumping; // keep track of jmp so pc doesnt accidently inc twice
 }CPU;
 
-/*
-what i did yesterday after exam
-begun to remake the control unit
-fetch instruction is acting weird and not printing
-was remaking decoded inst struct, need to remake execute.h
-u dont need convertint cause  assembler did that
-dont need to change aruthmetic inst much
-*/
-
 // for reference https://youtu.be/rdKX9hzA2lU?si=gsVF8THibba89D1V 
-
-/*
-firstly, read from binary file
-load into ram now 1d
-
-fetch inst from ram
-decode and execute
-add li addi etc
-
-*/
