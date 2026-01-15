@@ -1,0 +1,10 @@
+; TESTING ASSEMBLER AND CPU EMULATOR INTEGRATION
+
+LI r0 10
+LI r1 6
+LI r4 25
+
+SUB r4 r0 r1 ; r4=4
+SUBI r5 r4 1 ; r5=3
+
+HALT; end program
