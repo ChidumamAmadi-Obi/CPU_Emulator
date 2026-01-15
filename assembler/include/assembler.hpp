@@ -25,11 +25,11 @@ void passOne(Assembler *assembler) { // check syntax and get labels w their loca
     string token;
     string pastToken ="";
     bool printOut=false;
-    bool gSyntax=false; // keeps track of correct syntax
+    bool gSyntax=false;
 
     if(assembler->errorCode!=NONE) return;
     if (DEBUG_FIRST_PASS) printOut=true;
-    for (int i=0; i<assembler->program.tokens.size(); i++){
+    for (int i=0; i<assembler->program.tokens.size(); i++){ // check every token
         gSyntax=false; 
         token=assembler->program.tokens[i];
         if (printOut) printf("\n%d -> %s IS BEING PASSED...",locationCounter, token.c_str());
@@ -52,7 +52,6 @@ void passOne(Assembler *assembler) { // check syntax and get labels w their loca
                 assembler->errorCode = SYNTAX_ERROR;
                 return;
             }
-
             gSyntax=true;
             token.pop_back(); // remove ':' before storing
             assembler->program.symbolTable[token]=locationCounter; // put label into symbol tabel w location counter
@@ -73,11 +72,9 @@ void passOne(Assembler *assembler) { // check syntax and get labels w their loca
         if (printOut)printf("OK");
         pastToken=token;
     }
-    // also calculate the amount of bytes in code
 }
 void passTwo(Assembler *assembler){ // generates binary and replaces symbols with their values
-    areLabelsDefined(assembler); // check if all labels r defined before second pass
-    
+    areLabelsDefined(assembler);
     if(assembler->errorCode!=NONE) return;
     bool printOut=false; 
     int IndexM=0; // machine code index
@@ -90,6 +87,7 @@ void passTwo(Assembler *assembler){ // generates binary and replaces symbols wit
     if(printOut) printf("GENERATING BIN CODE: ");
 
     for (int i=0; i<assembler->program.tokens.size(); i++) { 
+
         verifiedToken=assembler->program.tokens[i];
         if (verifiedToken.back() == ':') continue; // if label dont add to machine code
 
@@ -103,20 +101,12 @@ void passTwo(Assembler *assembler){ // generates binary and replaces symbols wit
         }        
 
         // if a valid token add binary to machine code verctor 
-        if (location != INVALID) assembler->program.machineCode.push_back(location);
+        if (location != INVALID) assembler->program.machineCode.push_back(location); 
         else if (bin != INVALID)  assembler->program.machineCode.push_back((uint8_t)bin); 
         else if (literal != INVALID_LITERAL) assembler->program.machineCode.push_back((uint8_t)literal);    
         if (printOut) printf("%s -> 0x%02X\n",assembler->program.tokens[i].c_str(), assembler->program.machineCode[IndexM]);
         IndexM++;        
-
-    }
-    for (auto& pair : assembler->program.symbolTable) { // verify that all labels are defined
-        if (pair.second == UNDEFINED_LABEL) {  // -1 means label was referenced but never defined
-            assembler->errorCode = SYMBOL_ERROR;
-            assembler->program.invalidLabel = pair.first;
-            return;
-        }
-    }
+    } 
 }
 
 //_________________________________________________________________________________________________
@@ -128,21 +118,4 @@ void assemble(Assembler *assembler){ // runs assembler
     passTwo(assembler);
 
     exportMachineCode(assembler);
-
-    // write to bin file after passes
-    
-    // everything else blah blah
-    /*
-    for every assembling process
-    functions should check for errorrs
-    if there is an error the process should not
-    go ahead, instead end the program
-
-    eg.
-
-    void tokenize(){
-        if (error) return;
-        //rest of code here
-    }
-    */
 }

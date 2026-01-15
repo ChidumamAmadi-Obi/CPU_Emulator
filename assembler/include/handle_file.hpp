@@ -3,6 +3,10 @@
 #include "config.hpp"
 
 void loadProgram(Assembler *assembler){ // loads program from external file and stores in string
+    /* BUG NEED TO FIX 
+    seems when valid assembly is writtenon the first line of the
+    file it deletes it, need to fix
+    */
     ifstream f("program.asm");
     
     if (!f.is_open()) {
@@ -45,6 +49,8 @@ void exportMachineCode(Assembler *assembler){
         assembler->errorCode = EXPORTING_BINARY_ERROR;
         return;
     } 
+    assembler->program.sizeOfProgam = assembler->program.machineCode.size(); // size in bytes
+    binOut.write((char*)&assembler->program.sizeOfProgam,sizeof(uint16_t));
 
     for (int i=0; i<assembler->program.machineCode.size(); i++) {
         binOut.write((char*)&assembler->program.machineCode[i], sizeof(uint8_t));

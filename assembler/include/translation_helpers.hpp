@@ -13,7 +13,7 @@ bool isLabel(string pastToken){ // checks if token is an nudefined label. else r
 }
 bool isNumber(string token) { // checks if number is in desired format, else returns false
     if (token.empty()) return false;
-    if (token.front() != '*') {
+    if (token.front() != '-') { // if positive number 
         if (token.size() > 2 && token[0] == '0' && (token[1] == 'x' || token[1] == 'X')) {// hex prefix
             for (size_t i = 2; i < token.size(); i++) {
                 if (!isxdigit(token[i])) return false;
@@ -29,7 +29,7 @@ bool isNumber(string token) { // checks if number is in desired format, else ret
         for (size_t i = 0; i < token.size(); i++) { // is decimal?
             if (!isdigit(token[i])) return false;
         } return true;
-    } else if (token.front() == '*') { 
+    } else if (token.front() == '-') { // if negative number
         if (token[1] == '0' && (token[2] == 'x' || token[2] == 'X')) {  // hex prefix
             for (size_t i=3; i < token.size(); i++) {
                 if (!isxdigit(token[i])) return false;
@@ -45,7 +45,7 @@ bool isNumber(string token) { // checks if number is in desired format, else ret
         for (size_t i = 1; i < token.size(); i++) { // is decimal?
             if (!isdigit(token[i])) return false;
         } return true;
-    }
+    } 
     return false;
 }
 
@@ -82,7 +82,7 @@ int8_t getLabelLocation(Assembler *assembler, string label) { // returns locatio
     } return assembler->program.symbolTable[label];
 }
 int8_t mapMnemonics(Assembler *assembler, string token){
-    static Maps gmaps;
+    static Maps gmaps; // get unordered maps to compare tokens to
     if (gmaps.mnemonicMap.find(token) != gmaps.mnemonicMap.end()) { // if valid mnemonic
         return (int8_t)gmaps.mnemonicMap[token];
     } 
@@ -90,9 +90,9 @@ int8_t mapMnemonics(Assembler *assembler, string token){
         return (int8_t)gmaps.regMap[token];
     } return INVALID; // if not found return -1 error
 }
-void areLabelsDefined(Assembler *assembler){
-    for (auto& pair : assembler->program.symbolTable) { // verify that all labels are defined
-        if (pair.second == UNDEFINED_LABEL) {  // -1 means label was referenced but never defined
+void areLabelsDefined(Assembler *assembler){// verify that all labels are defined
+    for (auto& pair : assembler->program.symbolTable) { 
+        if (pair.second == UNDEFINED_LABEL) {  
             assembler->errorCode = SYMBOL_ERROR;
             assembler->program.invalidLabel = pair.first;
             return;

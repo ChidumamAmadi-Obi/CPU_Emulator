@@ -8,17 +8,17 @@ void inspectErrors(Assembler *assembler){ // list errors if any
         SetConsoleTextAttribute(assembler->col, RED);
         printf("\n\nPROGRAM EXITED WITH ERROR CODE: %d\n", error);
         switch(error) {
-            case LOADING_PROGRAM_ERROR: printf("ERROR LOADING PROGRAM FILE"); break;
-            case EXPORTING_BINARY_ERROR: printf("ERROR EXPORTING BINARY FILE"); break;
-            case SYNTAX_ERROR: printf("SYNTAX ERROR, '%s' IS AN INVALID TOKEN",assembler->program.invalidToken.c_str()); break;
-            case SYMBOL_ERROR: printf("SYMBOL TABLE ERROR, LABEL '%s' IS UNDEFINED",assembler->program.invalidLabel.c_str()); break;
-            case BIN_GEN_ERROR: printf("ERROR GENERATING BINARY FILE"); break;
+            case LOADING_PROGRAM_ERROR: printf("ERROR LOADING PROGRAM FILE\n"); break;
+            case EXPORTING_BINARY_ERROR: printf("ERROR EXPORTING BINARY FILE\n"); break;
+            case SYNTAX_ERROR: printf("SYNTAX ERROR, '%s' IS AN INVALID TOKEN\n",assembler->program.invalidToken.c_str()); break;
+            case SYMBOL_ERROR: printf("SYMBOL TABLE ERROR, LABEL '%s' IS UNDEFINED\n",assembler->program.invalidLabel.c_str()); break;
+            case BIN_GEN_ERROR: printf("ERROR GENERATING BINARY FILE\n"); break;
             default: break;
         }
         SetConsoleTextAttribute(assembler->col, DEFAULT_WHITE);
     } else {
-        SetConsoleTextAttribute(assembler->col, BRIGHT_GREEN);
-        printf("\n\nPROGRAM EXITED WITH ZERO ERRORS :]");
+        SetConsoleTextAttribute(assembler->col, CYAN);
+        printf("\nPROGRAM EXITED WITH ZERO ERRORS :]\n\n");
         SetConsoleTextAttribute(assembler->col, DEFAULT_WHITE);
     }
 }
@@ -51,8 +51,9 @@ void inspectBinary(Assembler *assembler){ // print binary output in hex
         for (int i=0; i<assembler->program.machineCode.size(); i++){
             printf(" 0x%x",assembler->program.machineCode[i]);
             if ((i+1)%8 == 0) printf("\n");
-        } 
+        }
         SetConsoleTextAttribute(assembler->col, YELLOW);
+        printf("\n PROGRAM SIZE %d BYTES",assembler->program.sizeOfProgam);
         printf("\n==================================");
         SetConsoleTextAttribute(assembler->col, DEFAULT_WHITE);
     } 

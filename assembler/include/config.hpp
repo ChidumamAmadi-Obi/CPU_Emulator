@@ -7,8 +7,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#include <windows.h> // for pretty terminal colors
-
+#include <windows.h> // for pretty terminal colors in windows
 
 // configure 
 #define SHOW_ERRORS 1
@@ -37,7 +36,7 @@ typedef enum{
     JMP_OFW,
     JMP_ZRO,
     JMP_NEG,
-    JMP_ABV, 
+    JMP_ABV, // jump if both the zero and negative flags are false
     ADD,
     SUB,
     MUL,
@@ -45,7 +44,17 @@ typedef enum{
     OR,
     XOR,
     EQU,
-    DIV
+    DIV,
+
+    LI, // load immediate
+    ADDI,
+    SUBI,
+    MULI,
+    ANDI,
+    ORI,
+    XORI,
+    EQUI,
+    DIVI
 }Mnemonics;
 typedef enum{
     R0,
@@ -112,6 +121,7 @@ typedef struct{
     string rawAsm = "";
     string invalidToken="";
     string invalidLabel="";
+    uint16_t sizeOfProgam=0; // size of program in bytes
     vector <string> tokens;
     vector <uint8_t> machineCode;
     unordered_map<string,int8_t> symbolTable; 
@@ -139,7 +149,16 @@ typedef struct{
         {"OR", OR},
         {"XOR", XOR},
         {"EQU", EQU},
-        {"DIV", DIV}};
+        {"DIV", DIV},
+        {"LI",LI},
+        {"ADDI",ADDI},
+        {"SUBI",SUBI},
+        {"MULI",MULI},
+        {"ANDI",ANDI},
+        {"OR",ORI},
+        {"XORI",XORI},
+        {"EQUI",EQUI},
+        {"DIVI",DIVI}};
     unordered_map<string,Registers> regMap = {
         {"r0", R0},
         {"r1",R1},
@@ -163,6 +182,7 @@ typedef struct{
         {"*r3",PTR_R3},
         {"*r4",PTR_R4},
         {"*r5",PTR_R5},
+        {"*r6",PTR_R6},
         {"*r7",PTR_R7},
         {"*r8",PTR_R8},
         {"*r9",PTR_R9},
@@ -175,18 +195,11 @@ typedef struct{
 }Maps;
 
 /*
-export to binary file
-changes colors of debuggin goutput
-
-*/
-
-/*
 https://www.geeksforgeeks.org/compiler-design/introduction-of-assembler/
-https://www.geeksforgeeks.org/cpp/how-to-print-colored-text-in-c/
 
 1. + make lexer/tokenizer 
 2. + make symbol table
-3. + first pass ( calc instruction sizes & get label addresses in symbol table )
+3. + first pass ( calc instruction sizes & get label addfresses in symbol table )
 4. + get mnemonics int o machine code
 5. + second pass ( replace mnemonics w opcodes & replace labels w acctual addresses )
 6. + output bin/hex machine code to a file
