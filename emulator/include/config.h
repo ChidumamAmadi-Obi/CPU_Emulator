@@ -1,20 +1,30 @@
-#ifndef CONFIG
-#define CONFIG
+#pragma once
 
 #include <stdbool.h>
 #include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <time.h>
 
 // debugging
-#define PRINT_RAM_MODE 0 // 0: dont print, 1: char, 2: int, 3:hex 
-#define PRINT_PC 0 // print each executed instruction
-#define PRINT_ERRORS 0
+#define SHOW_ERRORS 1
+#define SHOW_RAM 0
+#define SHOW_REGISTERS 1
+#define SHOW_PC 1 // print each executed instruction
 
-// ascii stuff
-#define ASCII_SPACE 0x20
-#define ASCII_SEMI_COLON 0x3b
+#define DEBUG_FETCH 0
+#define DEBUG_DECODE 0
+#define DEBUG_EXECUTE 0
+
+#define ANSI_RED     "\x1b[31m"
+#define ANSI_GREEN   "\x1b[32m"
+#define ANSI_YELLOW  "\x1b[33m"
+#define ANSI_BLUE    "\x1b[34m"
+#define ANSI_MAGENTA "\x1b[35m"
+#define ANSI_CYAN    "\x1b[36m"
+#define ANSI_RESET   "\x1b[0m"
+#define ANSI_BOLD_WHITE "\e[1;37m"
 
 // alu constants
 #define MSB 0x80
@@ -24,7 +34,7 @@
 
 // memory constants
 #define RAM_SIZE 0xFF
-#define INST_LENGTH 24
+#define INST_LENGTH 4 
 #define CPU_REG_NO 16
 
 #if PRINT_ERRORS == 1
@@ -34,17 +44,15 @@
 #endif
 
 typedef enum{
+    HALT,    
     STR,
     LD,
     JMP,
     MOV,
-    HALT,
-
     JMP_OFW,
     JMP_ZRO,
     JMP_NEG,
-    JMP_ABV, // jump if neither the zero or negative flags are true
-
+    JMP_ABV, // jump if both the zero and negative flags are false
     ADD,
     SUB,
     MUL,
@@ -52,8 +60,52 @@ typedef enum{
     OR,
     XOR,
     EQU,
-    DIV
+    DIV,
+
+    LI, // load immediate
+    ADDI,
+    SUBI,
+    MULI,
+    ANDI,
+    ORI,
+    XORI,
+    EQUI,
+    DIVI
 }CPUInstruction;
+typedef enum{
+    R0,
+    R1,
+    R2,
+    R3,
+    R4,
+    R5,
+    R6,
+    R7,
+    R8,
+    R9,
+    R10,
+    R11,
+    R12,
+    R13,
+    R14,
+    R15,
+    PTR_R0,
+    PTR_R1,
+    PTR_R2,
+    PTR_R3,
+    PTR_R4,
+    PTR_R5,
+    PTR_R6,
+    PTR_R7,
+    PTR_R8,
+    PTR_R9,
+    PTR_R10,
+    PTR_R11,
+    PTR_R12,
+    PTR_R13,
+    PTR_R14,
+    PTR_R15
+}Registers;
 typedef enum{
     OP_ADD,              
     OP_SUB, 
@@ -74,16 +126,20 @@ typedef enum{
     OP_DIVIDE,           
     OP_MULT,             
 }ALUOperations;
-typedef enum{ // for visualizing data in ram
-    NONE=0,
-    CHAR,
-    INTEGER,
-    HEX
-}MemPrintModes;
+typedef enum{ // stop running cpu if one of these errors show up
+    NONE,
+    ERROR_LOADING_PROGRAM,
+    ERROR_FETCHING_INSTRUCTION,
+    ERROR_DECODING_INSTRUCTION,
+    ERROR_EXECUTING_INTRUCTION,
+    ERROR_MEMORY_OUT_OF_BOUNDS,
+    ERROR_INVALID_ARITHMETIC_OPERATION
+}FatalErrors;
 
 typedef struct{ // records metrics
     uint32_t cycles;
     uint32_t executedInstructions;
+    double exetime;
 }Preformance;
 typedef struct{ // alu results
     int8_t output;
@@ -91,20 +147,15 @@ typedef struct{ // alu results
     bool carryFlag;
     bool errorFlag;
 }ALUResults;
-typedef struct{ // parsed instruction
-    CPUInstruction opcodeNo;
-    char*opcode;
-    char*operand1;
-    char*operand2;
-    char*operand3;
-}DecodedInst;
 typedef struct{ // CPU variables
     ALUResults alu;
     Preformance metrics;
+    uint8_t fatalerror;
     uint8_t instructionReg[INST_LENGTH];
-    int8_t gpRegs[CPU_REG_NO];
-    int8_t ram[RAM_SIZE][INST_LENGTH]; // 2d ram unconventional but oh well 
-    uint8_t programCounter;
+    uint8_t gpRegs[CPU_REG_NO];
+    uint8_t ram[RAM_SIZE]; // 2d ram unconventional but oh well 
+    uint16_t programCounter;
+    uint16_t ramPtr;
 
     bool errorFlag; // alu flags
     bool zeroFlag;
@@ -115,6 +166,23 @@ typedef struct{ // CPU variables
     bool isJumping; // keep track of jmp so pc doesnt accidently inc twice
 }CPU;
 
-#endif
+/*
+what i did yesterday after exam
+begun to remake the control unit
+fetch instruction is acting weird and not printing
+was remaking decoded inst struct, need to remake execute.h
+u dont need convertint cause  assembler did that
+dont need to change aruthmetic inst much
+*/
 
 // for reference https://youtu.be/rdKX9hzA2lU?si=gsVF8THibba89D1V 
+
+/*
+firstly, read from binary file
+load into ram now 1d
+
+fetch inst from ram
+decode and execute
+add li addi etc
+
+*/

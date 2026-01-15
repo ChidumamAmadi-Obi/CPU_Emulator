@@ -1,18 +1,8 @@
-#ifndef ALU_EMULATOR
-#define ALU_EMULATOR
+#pragma once
 
 #include "config.h"
 
 // 8 bit ALU handles SIGNED arithmetic
-
-void clearFlags(CPU* cpu){ // clears all alu status flags
-    cpu->alu.errorFlag = false;
-    cpu->alu.carryFlag = false;    
-
-    cpu->overflowFlag = false; 
-    cpu->negativeFlag = false;
-    cpu->zeroFlag = false;
-}
 
 bool detectOverflow(int8_t inputA, int8_t inputB, ALUOperations operation, CPU* cpu ){ // detects overflow whith arithmetic ops
     bool signA = (inputA & MSB) != 0; // checks signs...
@@ -30,6 +20,14 @@ bool detectOverflow(int8_t inputA, int8_t inputB, ALUOperations operation, CPU* 
         return (signA == signNegB) && (signA != signR);
     } else if (operation == OP_MULT) { return (cpu->alu.tempResult > 127) || (cpu->alu.tempResult < MIN_NUMBER);
     } else return false;   
+}
+void clearFlags(CPU* cpu){ // clears all alu status flags
+    cpu->alu.errorFlag = false;
+    cpu->alu.carryFlag = false;    
+
+    cpu->overflowFlag = false; 
+    cpu->negativeFlag = false;
+    cpu->zeroFlag = false;
 }
 
 void ALUEmulator(int8_t inputA, int8_t inputB, ALUOperations operation, CPU *cpu) {
@@ -108,5 +106,3 @@ void ALUEmulator(int8_t inputA, int8_t inputB, ALUOperations operation, CPU *cpu
         cpu->alu.output=0;
     } 
 }
-
-#endif

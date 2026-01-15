@@ -1,64 +1,66 @@
-#ifndef CPU_HEADER
-#define CPU_HEADER
+#pragma once 
 
 #include "config.h"
 #include "ALU.h"
 #include "memory.h"
 #include "control_unit.h"
 
-void printInst(CPU *cpu){
-    for (int i=0; i<INST_LENGTH; i++){
-        if ((cpu->instructionReg[i] != 0) && (cpu->instructionReg[i] != ASCII_SEMI_COLON)) { // print if needed
-            printf("%c",cpu->instructionReg[i]);
-        } 
+// DEBUGGING STUFF _____________________________________________________________________________
+void showFatalErrors(CPU*cpu){
+    if (cpu->fatalerror==NONE) {
+        printf(ANSI_GREEN"\nFINISHED PROGRAM WITH ZERO ERRORS :]\n\n"ANSI_RESET);
+        return;
     }
-    printf("\n");
+
+    printf(ANSI_RED"\n\nPROGRAM EXITED WITH ERROR CODE %d"ANSI_RESET, cpu->fatalerror);
+    switch(cpu->fatalerror) {
+        case ERROR_LOADING_PROGRAM:              printf(ANSI_RED"\nERROR, LOADING PROGRAM"ANSI_RESET); break;
+        case ERROR_FETCHING_INSTRUCTION:         printf(ANSI_RED"\nERROR, FETCHING INSTRUCTION %d"ANSI_RESET, cpu->programCounter); break;
+        case ERROR_DECODING_INSTRUCTION:         printf(ANSI_RED"\nERROR, DECODING INSTRUCTOIN %d"ANSI_RESET, cpu->programCounter); break;
+        case ERROR_EXECUTING_INTRUCTION:         printf(ANSI_RED"\nERROR, EXECUTING INSTRUCTION %d"ANSI_RESET, cpu->programCounter); break;
+        case ERROR_MEMORY_OUT_OF_BOUNDS:         printf(ANSI_RED"\nERROR, PROGRAM ATTEPTE TO ACCESS MEMORY OUT OF BOUNDS"ANSI_RESET); break;
+        case ERROR_INVALID_ARITHMETIC_OPERATION: printf(ANSI_RED"\nERROR, PROGRAM ATTEMPTED TO EXECUTE INVALID ARITHMETIC INSTRUCTION"ANSI_RESET); break;
+        default:                                 printf(ANSI_RED"\nUNKNOWN FATAL ERROR OCCURED"ANSI_RESET);return;
+    }
+
 }
 
-void visualizeSteps(CPU *cpu){
-    printf("___________________________________\n");
-    printf("   PROGRAM COUNTER    |  %d\n",cpu->programCounter); 
-    printf(" INSTRUCTION REGISTER |  "); printInst(cpu);
-    printf("      ZERO FLAG       |  %d\n",cpu->zeroFlag);
-    printf("    OVERFLOW FLAG     |  %d\n",cpu->overflowFlag);
-    printf("    NEGATIVE FLAG     |  %d\n",cpu->negativeFlag);
-    printf("     ERROR FLAG       |  %d\n",cpu->errorFlag);
-    printf("___________________________________\n");
-    printf("R0  | %d\nR1  | %d\nR2  | %d\nR3  | %d\nR4  | %d\nR5  | %d\nR6  | %d\nR7  | %d\nR8  | %d\nR9  | %d\nR10 | %d\nR11 | %d\nR12 | %d\nR13 | %d\nR14 | %d\nR15 | %d\n",
-    cpu->gpRegs[0],cpu->gpRegs[1],cpu->gpRegs[2],cpu->gpRegs[3],cpu->gpRegs[4],cpu->gpRegs[5],cpu->gpRegs[6],cpu->gpRegs[7],
-    cpu->gpRegs[8],cpu->gpRegs[9],cpu->gpRegs[10],cpu->gpRegs[11],cpu->gpRegs[12],cpu->gpRegs[13],cpu->gpRegs[14],cpu->gpRegs[15]);
-    printf("___________________________________\n");
+void inspectRam(CPU*cpu){
+    printf(ANSI_YELLOW"\n=================CPU RAM=================\n"ANSI_RESET);
+    for (int i=0; i<RAM_SIZE; i++) {
+        if ((i+1)%8 == 0) printf("\n"); // print in rows of 8 bytes
+        printf(" 0x%02X",cpu->ram[i]);
+    }
+    printf(ANSI_YELLOW"\n========================================="ANSI_RESET);
+}
+void inspectRegisters(CPU*cpu){
+    printf(ANSI_YELLOW"\n================REGISTERS================\n"ANSI_RESET);
+    for (int i=0; i<CPU_REG_NO; i++) {
+        if ((i+1) % 4 == 0) printf("\n"); // print in rows of 4
+        if( i<10 ) printf(" R%d:  0x%02X",i,cpu->gpRegs[i]);
+        else       printf(" R%d: 0x%02X",i,cpu->gpRegs[i]); 
+    }
+    printf(ANSI_YELLOW"\n========================================="ANSI_RESET);
+}
+void inspectPC(CPU*cpu){
+    // printf(ANSI_YELLOW"\n==PC=====OPCODE==========OPERANDS========"ANSI_RESET);
+    printf("\n  %d   ->  ",cpu->programCounter); 
+    printf("0x%02X        ",cpu->instructionReg[0]);
+    for ( int i=1; i<4; i++) {
+        if (cpu->instructionReg[0] == HALT) printf("0x00 ");
+        else printf("0x%02X ",cpu->instructionReg[i]);
+    }
+    // printf(ANSI_YELLOW"\n========================================="ANSI_RESET);
 }
 
-void initCPU(CPU *cpu){ // on startup...
-    loadProgram(cpu);
-    cpu->isRunning = true;
-}
-
-void resetCPU(CPU *cpu){ // (in progress) on key press cpu will be reset...
-    clearRAM(cpu);
+// RUNNING CPU ___________________________________________________________________
+void initCPU(CPU*cpu) {
+    if (SHOW_PC) printf(ANSI_YELLOW"\n==PC=====OPCODE==========OPERANDS========"ANSI_RESET);
     initCtrlUnit(cpu);
+    loadProgram(cpu);
 }
-
-void runCPU(CPU *cpu){ // fetch decode execute
-    static DecodedInst inst;
-
-    cpuFetch(cpu,PRINT_PC);
-    inst = cpuDecode(cpu);
-    cpuExecute(&inst,cpu);
-    visualizeSteps(cpu);
-    cpu->metrics.cycles++; // counts each cycle        
+void runCPU(CPU*cpu) {
+    cpuFetch(cpu); 
+    cpuDecodeExecute(cpu);
+    if (SHOW_PC) inspectPC(cpu);
 }
-
-void debugRegisters(CPU*cpu){
-    for (int i=0; i<CPU_REG_NO; i++){
-        printf("\nREG %d -> %d",i,cpu->gpRegs[i]);
-    }
-}
-
-void debugCPU(CPU *cpu){
-    debugRAM(PRINT_RAM_MODE,cpu);
-    // more debugging here......
-}
-
-#endif

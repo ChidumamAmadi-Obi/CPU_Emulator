@@ -1,83 +1,39 @@
-#ifndef CPU_MEM
-#define CPU_MEM
+#pragma once 
 
 #include "config.h"
 
 // RAM and ROM memory & program loading
 
+// https://www.tutorialkart.com/c-programming/how-to-read-binary-data-from-a-file-in-c/
+
 void clearRAM(CPU* cpu){ // clears data in ram but not read only memory
     for (int j=0; j<INST_LENGTH; j++){
         for (int i=RAM_SIZE/2; i<RAM_SIZE; i++){
-            cpu->ram[i][j]=0;
+            cpu->ram[i]=0;
         }
     }
 }
 
-void loadProgram(CPU *cpu){                         // loads program from external txt file into 
-    FILE *fptr = fopen("program.asm", "r");         // read only memory, first half of ram
-    if (fptr == NULL){
+void loadProgram(CPU *cpu){ // loads program from external txt file into 
+    FILE *binFile = fopen("program.bin", "r");         // read only memory, first half of ram
+    uint16_t programSize; 
+    if (binFile == NULL){
         printf("ERROR OPENING PROGRAM FILE\n");
+        cpu->fatalerror=ERROR_LOADING_PROGRAM;
+        fclose(binFile);
         return;
     }
+    
+    size_t bytesInProgram = fread(&programSize,sizeof(uint16_t),1 ,binFile);
+    size_t readbytes = fread(cpu->ram, sizeof(int8_t),programSize,binFile);
+    /*
+    for (int i=0; i<readbytes; i++) {
+        printf("0x%X ", cpu->ram[i]);
+    }    
+    */
 
-    int ch;
-    int instruction=0;
-    int letter=0;
-    bool delComment=false; 
-    bool hasData=false; 
-    bool newLine=false;
 
-    while ((ch = fgetc(fptr)) != EOF) {
-        if (ch == '\n') { 
-            if (hasData) instruction++; // only inc if line has data
-            letter = 0;
-            delComment = false;  // Reset comment flag for next line
-            hasData=false;
-            newLine=true;
-        } else if (ch == ASCII_SPACE && newLine) { // trim whitespace
-        } else {
-            if (ch == ASCII_SEMI_COLON){
-                if (!delComment) { // deletes both inline and whole line comments
-                    cpu->ram[instruction][letter]=ch; //leaves semicolon
-                    letter++;
-                }
-                delComment = true; // Skip line if it starts with ';'
-                newLine=false;
-            } else if (!delComment) {
-                if (letter < INST_LENGTH - 1) {
-                    hasData=true;
-                    newLine=false;
-                    cpu->ram[instruction][letter] = ch; // load to ram as normal
-                    letter++;
-                }
-            }
-        }
-    }
-    fclose(fptr);
-}
-
-void debugRAM(MemPrintModes mode, CPU *cpu){ // prints contents of RAM
-    uint8_t mem;
-    if (mode!=NONE) {
-        for (int x=0; x<RAM_SIZE; x++){
-            printf("%d ->   ", x); // prints address of instruction
-            for (int y=0; y<INST_LENGTH; y++){
-                mem = cpu->ram[x][y]; 
-                if (mem == 0) {// do nothing
-                } else {
-                    switch(mode) {
-                        case CHAR:      printf("%c",mem); break;
-                        case INTEGER:   printf("%d ",mem); break;
-                        case HEX:       printf("0x%x ",mem); break;
-                        default:        printf("%c",mem); break;
-                    }
-                }
-            }
-            printf("\n");
-        }        
-    }
+    fclose(binFile);
 }
 
 // for reference https://www.youtube.com/watch?v=Ui6QyzcD3_E
-
-#endif
