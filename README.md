@@ -16,7 +16,7 @@ https://github.com/user-attachments/assets/024d12c7-3525-45a2-bc83-52e91714f8e2
   * Two-pass assembly process (symbol resolution, code generation)
   * Label support with forward referencing
   * Multiple number formats (decimal, hex, binary)
-  * Pointer syntax (`*rX` for register-indirect, `*0xFE` for absolute)
+  * Pointer syntax (`*rX` for register-indirect)
   * Syntax validation with error location
   * Robust Error Reporting
   * Symbol table generation for debug visibility
@@ -46,8 +46,8 @@ https://github.com/user-attachments/assets/024d12c7-3525-45a2-bc83-52e91714f8e2
 
 ### How to Run on Your Machine
    **1.** Clone Repo <br>
-   **2.** Create the file ```program.asm``` in the root directory to run your own assembly instructions 
-   **3.** Build and run CPU Emulator and Assembler program
+   **2.** Modify the file ```program.asm``` to run your own assembly instructions 
+   **3.** Build and run CPU Emulator and Assembler 
    ``` bash
     g++ -Iassembler/include -o assembler assembler/src/*.cpp
     ./assembler
@@ -55,27 +55,24 @@ https://github.com/user-attachments/assets/024d12c7-3525-45a2-bc83-52e91714f8e2
     ./emulator.exe
    ```
   
-   #### Example ASM Program (Factorial)
+   #### Example ASM Program
    ``` asm
-   ; FACTORIAL EXAMPLE
-   LD r0 5; calculate 5!
-   LD r1 1; temp
+   ; TESTING ASSEMBLER AND CPU EMULATOR INTEGRATION
    
-   ; LOOP:
-   MUL r1 r1 r0; multiply contents of r1 by r0
-   SUB r0 r0 1; decriment contents of r0
-   JMP_ZRO 6; if result is zero, jump to END
-   JMP 2; jump to LOOP
+   LI r0 10
+   LI r1 6
+   LI r4 25
    
-   ; END:
-   STR *0xFE r1; store result in RAM location 0xFE
+   SUB r4 r0 r1 ; r4=4
+   SUBI r5 r4 1 ; r5=3
+   
    HALT; end program
    ```
 
    ##### Example CPU Emulator Output Snippet
-   <img width="472" height="689" alt="image" src="https://github.com/user-attachments/assets/741980cd-d9d6-4c22-9b76-1f6c8b03d38c" /> <br>
+   <img width="565" height="505" alt="image" src="https://github.com/user-attachments/assets/81484c95-5656-448f-a76a-e536c7709334" /> <br>
    ##### Example Assembler Output Snippet With Labels Used
-   <img width="490" height="309" alt="image" src="https://github.com/user-attachments/assets/3eff521a-3bb1-4e23-8036-ed78af0a92b4" />
+   <img width="623" height="270" alt="image" src="https://github.com/user-attachments/assets/f953d095-a270-4bcd-af60-860cc1db1fb3" />
 
 ### Preformance
 - **_Fibonacci(8):_** 47 cycles, 21 result 
@@ -104,7 +101,7 @@ https://github.com/user-attachments/assets/024d12c7-3525-45a2-bc83-52e91714f8e2
 - [ ] Macro support
 
 #### Future Improvements
- - [ ] Modify Control Unit to decode & process binary instructions
- - [ ] Transition from 2D RAM to 1D
+ - [x] Modify Control Unit to decode & process binary instructions
+ - [x] Transition from 2D RAM to 1D
  - [ ] Run Bubble sorting Algorithm on CPU
  - [ ] Better Handling of edge cases on the CPU emulator
