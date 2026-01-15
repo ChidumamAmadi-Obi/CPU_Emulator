@@ -69,8 +69,8 @@ https://github.com/user-attachments/assets/024d12c7-3525-45a2-bc83-52e91714f8e2
    HALT; end program
    ```
 
-   ##### Example CPU Emulator Output Snippet
-   <img width="565" height="505" alt="image" src="https://github.com/user-attachments/assets/81484c95-5656-448f-a76a-e536c7709334" /> <br>
+   ##### Example CPU Emulator Output 
+   <img width="596" height="515" alt="image" src="https://github.com/user-attachments/assets/8664226d-dc2f-4677-aac5-cd58f0618156" /><br>
    ##### Example Assembler Output Snippet With Labels Used
    <img width="623" height="270" alt="image" src="https://github.com/user-attachments/assets/f953d095-a270-4bcd-af60-860cc1db1fb3" />
 
