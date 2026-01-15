@@ -46,15 +46,15 @@ https://github.com/user-attachments/assets/024d12c7-3525-45a2-bc83-52e91714f8e2
 
 ### How to Run on Your Machine
    **1.** Clone Repo <br>
-   **2.** Build and run CPU Emulator and Assembler with default program
+   **2.** Create the file ```program.asm``` in the root directory to run your own assembly instructions 
+   **3.** Build and run CPU Emulator and Assembler program
    ``` bash
     g++ -Iassembler/include -o assembler assembler/src/*.cpp
     ./assembler
     gcc -Iemulator/include -o emulator emulator/src/*.c  
     ./emulator.exe
    ```
-   **3.** Modify ```program.asm``` to run your own assembly instructions 
-   
+  
    #### Example ASM Program (Factorial)
    ``` asm
    ; FACTORIAL EXAMPLE
@@ -71,6 +71,7 @@ https://github.com/user-attachments/assets/024d12c7-3525-45a2-bc83-52e91714f8e2
    STR *0xFE r1; store result in RAM location 0xFE
    HALT; end program
    ```
+
    ##### Example CPU Emulator Output Snippet
    <img width="472" height="689" alt="image" src="https://github.com/user-attachments/assets/741980cd-d9d6-4c22-9b76-1f6c8b03d38c" /> <br>
    ##### Example Assembler Output Snippet With Labels Used
