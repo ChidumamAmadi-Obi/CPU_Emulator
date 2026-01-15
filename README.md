@@ -1,8 +1,8 @@
 # 8-Bit CPU Emulator in C
 Lightweight, modular 8-bit CPU emulator with a multiple-pass assembler written in C/C++ for fun to explore computer architecture, instruction execution, and low-level programming.
 
-### Assembler Demo
-https://github.com/user-attachments/assets/024d12c7-3525-45a2-bc83-52e91714f8e2
+### CPU Emulator & Assembler Demo
+https://github.com/user-attachments/assets/75f93fe8-73d6-4d27-a5fe-8988b23c65bf
 
 ### Features 
 **CPU Emulator**
@@ -10,9 +10,8 @@ https://github.com/user-attachments/assets/024d12c7-3525-45a2-bc83-52e91714f8e2
  * Support for multiple number formats (decimal, hex, binary)
  * Program loading from external assembly file ```(program.asm)```
  * Configurable debug output (RAM view, PC tracing, error logging)
- * Execution metrics
 
-**Assembler (in progress)**
+**Assembler**
   * Two-pass assembly process (symbol resolution, code generation)
   * Label support with forward referencing
   * Multiple number formats (decimal, hex, binary)
@@ -20,29 +19,6 @@ https://github.com/user-attachments/assets/024d12c7-3525-45a2-bc83-52e91714f8e2
   * Syntax validation with error location
   * Robust Error Reporting
   * Symbol table generation for debug visibility
-
-### Block Diagram
-<img width="515" height="530" alt="image" src="https://github.com/user-attachments/assets/ec21b225-f742-4e39-9723-24ad19e1f3b4" />
-
-### Instruction Set
-| Instruction | Format | Description |
-|-------------|--------|-------------|
-| ADD | `ADD rd rs1 rs2` | Add two registers |
-| SUB | `SUB rd rs1 rs2` | Subtract two registers |
-| MUL | `MUL rd rs1 rs2` | Multiply two registers |
-| AND | `AND rd rs1 rs2` | Logically AND two registers |
-| OR | `OR rd rs1 rs2` | Logically OR two registers |
-| XOR | `XOR rd rs1 rs2` | Logically XOR two registers |
-| EQU | `EQU rd rs1 rs2` | Compare two registers |
-| DIV | `DIV rd rs1 rs2` | Divide rs1 by rs2 |
-| LD | `LD rd *addr` | Load from memory |
-| STR | `STR *addr rs` | Store to memory |
-| JMP | `JMP addr` | Unconditional jump |
-| MOV | `MOV rs1 rs2` | Copy contents of register rs2 into rs1 |
-| JMP_ZRO | `JMP_ZRO addr` | Jump if zero flag set |
-| JMP_OFW | `JMP_OFW addr` | Jump if overflow flag set |
-| JMP_NEG | `JMP_NEG addr` | Jump if negative flag set |
-| JMP_ABV | `JMP_ABV addr` | Jump if both negative and zero flags are NOT set |
 
 ### How to Run on Your Machine
    **1.** Clone Repo <br>
@@ -55,29 +31,46 @@ https://github.com/user-attachments/assets/024d12c7-3525-45a2-bc83-52e91714f8e2
     ./emulator.exe
    ```
   
-   #### Example ASM Program
+   #### Example ASM Program (Sum of Array)
    ``` asm
-   ; TESTING ASSEMBLER AND CPU EMULATOR INTEGRATION
-   
-   LI r0 10
-   LI r1 6
-   LI r4 25
-   
-   SUB r4 r0 r1 ; r4=4
-   SUBI r5 r4 1 ; r5=3
-   
-   HALT; end program
+       ; EXAMPLE PROGRAM: SUMS ARRAY OF NUMNERS (sum = 76)
+       ; EXECUTES IN 36 CYCLES
+       
+       ; initialize array
+       LI r15 12; use temp register to load array values
+       STR 0xF0 r15
+       STR 0xF1 r15
+       LI r15 48
+       STR 0xF2 r15
+       LI r15 4
+       STR 0xF3 r15
+       LI r15 0; clear r15
+       
+       LI r0 0; sum
+       LI r1 4; no of elements in array 
+       LI r2 0xF0; pointer to array start
+       
+       START:
+           LD r3 *r2; load array element with pointer
+           ADD r0 r0 r3; add to sum
+           ADDI r2 r2 1; increment pointer
+           SUBI r1 r1 1; decrement counter
+           JMP_ZRO FINISH; when the end of the array is reached, jump to FINISH
+           JMP START; jump to START
+       
+       FINISH:
+           STR 0xFE r0; store result in RAM location 0xFE
+           HALT; end program
    ```
-
-   ##### Example CPU Emulator Output 
-   <img width="596" height="515" alt="image" src="https://github.com/user-attachments/assets/8664226d-dc2f-4677-aac5-cd58f0618156" /><br>
-   ##### Example Assembler Output Snippet With Labels Used
-   <img width="623" height="270" alt="image" src="https://github.com/user-attachments/assets/f953d095-a270-4bcd-af60-860cc1db1fb3" />
-
+   ##### Assembler Output
+   <img width="442" height="338" alt="image" src="https://github.com/user-attachments/assets/aa6cb01c-85df-4bb1-9c17-833e363499b9" /><br>
+   ##### CPU Emulator Output 
+   <img width="429" height="856" alt="image" src="https://github.com/user-attachments/assets/a85a3f0e-6d8f-45d5-a89c-8d258c495a71" />
+   
 ### Preformance
-- **_Fibonacci(8):_** 47 cycles, 21 result 
+- **_Fibonacci(8):_** 36 cycles, 21 result 
 - **_5! Factorial:_** 23 cycles, 120 result  
-- **_Sum of Array (4 elements):_** 32 cycles
+- **_Sum of Array (4 elements):_** 36 cycles
 - **_Prime Number Checker:_** (coming soon)
 - **_Bubble Sort:_** (coming soon)
 - **Average CPI:** 1 cycle per instruction
@@ -103,5 +96,5 @@ https://github.com/user-attachments/assets/024d12c7-3525-45a2-bc83-52e91714f8e2
 #### Future Improvements
  - [x] Modify Control Unit to decode & process binary instructions
  - [x] Transition from 2D RAM to 1D
+ - [x] Better Handling of edge cases on the CPU emulator
  - [ ] Run Bubble sorting Algorithm on CPU
- - [ ] Better Handling of edge cases on the CPU emulator
