@@ -25,17 +25,17 @@ void inspectErrors(Assembler *assembler){ // list errors if any
 void inspectSymbolTable(Assembler *assembler){ // list all labels
     if (assembler->program.symbolTable.empty()) {
         SetConsoleTextAttribute(assembler->col, PINK);
-        printf("\n========SYMBOL TABLE EMPTY========");
+        printf("\n===========SYMBOL TABLE EMPTY============");
         SetConsoleTextAttribute(assembler->col, DEFAULT_WHITE);
     } else {
         SetConsoleTextAttribute(assembler->col, YELLOW);
-        printf("\n===========SYMBOL TABLE===========\n");
+        printf("\n==============SYMBOL TABLE==============\n");
         SetConsoleTextAttribute(assembler->col, DEFAULT_WHITE);
         for (auto i : assembler->program.symbolTable){
-            printf(" LABEL: '%s' -> LOCATION: %d\n",i.first.c_str(), i.second);
+            printf(" \e[1;37mLABEL:\e[0m '%s' -> \e[1;37mLOCATION:\e[0m %d\n",i.first.c_str(), i.second);
         } 
         SetConsoleTextAttribute(assembler->col, YELLOW);
-        printf("==================================");
+        printf("========================================");
         SetConsoleTextAttribute(assembler->col, DEFAULT_WHITE);
     } 
 }
@@ -46,15 +46,15 @@ void inspectBinary(Assembler *assembler){ // print binary output in hex
         SetConsoleTextAttribute(assembler->col, DEFAULT_WHITE);
     } else {
         SetConsoleTextAttribute(assembler->col, YELLOW);
-        printf("\n===========BINARY OUTPUT==========\n");
+        printf("\n==============BINARY OUTPUT=============\n");
         SetConsoleTextAttribute(assembler->col, DEFAULT_WHITE);
         for (int i=0; i<assembler->program.machineCode.size(); i++){
-            printf(" 0x%x",assembler->program.machineCode[i]);
+            printf(" 0x%02X",assembler->program.machineCode[i]);
             if ((i+1)%8 == 0) printf("\n");
         }
         SetConsoleTextAttribute(assembler->col, YELLOW);
         printf("\n PROGRAM SIZE %d BYTES",assembler->program.sizeOfProgam);
-        printf("\n==================================");
+        printf("\n========================================");
         SetConsoleTextAttribute(assembler->col, DEFAULT_WHITE);
     } 
 }

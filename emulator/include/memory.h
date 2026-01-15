@@ -18,22 +18,18 @@ void loadProgram(CPU *cpu){ // loads program from external txt file into
     FILE *binFile = fopen("program.bin", "r");         // read only memory, first half of ram
     uint16_t programSize; 
     if (binFile == NULL){
-        printf("ERROR OPENING PROGRAM FILE\n");
-        cpu->fatalerror=ERROR_LOADING_PROGRAM;
+        cpu->fatalError=ERROR_LOADING_PROGRAM;
         fclose(binFile);
         return;
     }
     
-    size_t bytesInProgram = fread(&programSize,sizeof(uint16_t),1 ,binFile);
-    size_t readbytes = fread(cpu->ram, sizeof(int8_t),programSize,binFile);
-    /*
-    for (int i=0; i<readbytes; i++) {
-        printf("0x%X ", cpu->ram[i]);
-    }    
-    */
-
-
-    fclose(binFile);
+    size_t bytesInProgram = fread(&programSize,sizeof(uint16_t),1 ,binFile); // read size of program (first 2 bytes)
+    if (!(bytesInProgram > RAM_SIZE/2)) {
+        size_t readbytes = fread(cpu->ram, sizeof(int8_t),programSize,binFile); // load program into ram
+        fclose(binFile);
+        return;
+    } 
+    cpu->fatalError=ERROR_PROGRAM_SIZE;    
 }
 
 // for reference https://www.youtube.com/watch?v=Ui6QyzcD3_E

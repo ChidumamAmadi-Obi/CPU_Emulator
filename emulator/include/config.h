@@ -12,10 +12,12 @@
 #define SHOW_RAM 0
 #define SHOW_REGISTERS 1
 #define SHOW_PC 1 // print each executed instruction
+#define SHOW_METRICS 1 // print execution time and completed cycles
 
 #define DEBUG_FETCH 0
 #define DEBUG_DECODE 0
 #define DEBUG_EXECUTE 0
+#define PRINT_ALU_ERRORS 0
 
 #define ANSI_RED     "\x1b[31m"
 #define ANSI_GREEN   "\x1b[32m"
@@ -25,6 +27,8 @@
 #define ANSI_CYAN    "\x1b[36m"
 #define ANSI_RESET   "\x1b[0m"
 #define ANSI_BOLD_WHITE "\e[1;37m"
+#define ANSI_BOLD_GREEN "\e[1;32m"
+#define ANSI_BOLD_RED  "\e[1;31m"
 
 // alu constants
 #define MSB 0x80
@@ -34,10 +38,10 @@
 
 // memory constants
 #define RAM_SIZE 0xFF
-#define INST_LENGTH 4 
+#define INST_LENGTH 4 // each instruction has a maximum length of 4 bytes
 #define CPU_REG_NO 16
 
-#if PRINT_ERRORS == 1
+#if PRINT_ALU_ERRORS == 1
 #define printError(x) printf(x)
 #else
 #define printError(x)
@@ -129,6 +133,7 @@ typedef enum{
 typedef enum{ // stop running cpu if one of these errors show up
     NONE,
     ERROR_LOADING_PROGRAM,
+    ERROR_PROGRAM_SIZE,
     ERROR_FETCHING_INSTRUCTION,
     ERROR_DECODING_INSTRUCTION,
     ERROR_EXECUTING_INTRUCTION,
@@ -150,12 +155,11 @@ typedef struct{ // alu results
 typedef struct{ // CPU variables
     ALUResults alu;
     Preformance metrics;
-    uint8_t fatalerror;
+    uint8_t fatalError;
     uint8_t instructionReg[INST_LENGTH];
     uint8_t gpRegs[CPU_REG_NO];
-    uint8_t ram[RAM_SIZE]; // 2d ram unconventional but oh well 
-    uint16_t programCounter;
-    uint16_t ramPtr;
+    uint8_t ram[RAM_SIZE];  
+    uint16_t programCounter; // tracks byte position in ram
 
     bool errorFlag; // alu flags
     bool zeroFlag;
@@ -163,7 +167,4 @@ typedef struct{ // CPU variables
     bool negativeFlag;
 
     bool isRunning;
-    bool isJumping; // keep track of jmp so pc doesnt accidently inc twice
 }CPU;
-
-// for reference https://youtu.be/rdKX9hzA2lU?si=gsVF8THibba89D1V 

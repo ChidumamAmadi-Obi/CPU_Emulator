@@ -21,21 +21,22 @@ void tokenize(Assembler *assembler){ // splits program up into individual "token
 }
 void passOne(Assembler *assembler) { // check syntax and get labels w their location counters
     Maps compareMaps;
-    uint8_t locationCounter=0;
+    uint8_t byteCounter=0; // keeps track of byte position of every token
     string token;
     string pastToken ="";
     bool printOut=false;
+    bool isTokenLabel=false;
     bool gSyntax=false;
 
     if(assembler->errorCode!=NONE) return;
     if (DEBUG_FIRST_PASS) printOut=true;
     for (int i=0; i<assembler->program.tokens.size(); i++){ // check every token
         gSyntax=false; 
+        isTokenLabel=false;
         token=assembler->program.tokens[i];
-        if (printOut) printf("\n%d -> %s IS BEING PASSED...",locationCounter, token.c_str());
+        if (printOut) printf("\nBYTE NO:%d -> %s IS BEING PASSED...",byteCounter, token.c_str());
         
         if (compareMaps.mnemonicMap.find(token) != compareMaps.mnemonicMap.end()) { // if mnemonic
-            locationCounter++;
             gSyntax=true;
 
         } else if (compareMaps.regMap.find(token) != compareMaps.regMap.end()){ // if reg number
@@ -53,8 +54,9 @@ void passOne(Assembler *assembler) { // check syntax and get labels w their loca
                 return;
             }
             gSyntax=true;
+            isTokenLabel=true;
             token.pop_back(); // remove ':' before storing
-            assembler->program.symbolTable[token]=locationCounter; // put label into symbol tabel w location counter
+            assembler->program.symbolTable[token]=byteCounter; // put label into symbol tabel w location counter
 
         } else if (assembler->program.symbolTable.find(token) != assembler->program.symbolTable.end()){
             gSyntax=true; // if label has been defined in symbol table
@@ -70,6 +72,7 @@ void passOne(Assembler *assembler) { // check syntax and get labels w their loca
             return;
         }
         if (printOut)printf("OK");
+        if (!isTokenLabel) byteCounter++; 
         pastToken=token;
     }
 }
