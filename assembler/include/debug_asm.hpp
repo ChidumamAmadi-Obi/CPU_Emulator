@@ -29,7 +29,7 @@ void inspectSymbolTable(Assembler *assembler){ // list all labels
         SetConsoleTextAttribute(assembler->col, DEFAULT_WHITE);
     } else {
         SetConsoleTextAttribute(assembler->col, YELLOW);
-        printf("\n===========SYMBOL TABEL===========\n");
+        printf("\n===========SYMBOL TABLE===========\n");
         SetConsoleTextAttribute(assembler->col, DEFAULT_WHITE);
         for (auto i : assembler->program.symbolTable){
             printf(" LABEL: '%s' -> LOCATION: %d\n",i.first.c_str(), i.second);
