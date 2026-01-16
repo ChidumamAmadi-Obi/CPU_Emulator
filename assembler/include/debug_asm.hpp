@@ -8,6 +8,7 @@ void inspectErrors(Assembler *assembler){ // list errors if any
         SetConsoleTextAttribute(assembler->col, RED);
         printf("\n\nPROGRAM EXITED WITH ERROR CODE: %d\n", error);
         switch(error) {
+            case NO_ASM_ERROR: printf("ERROR NO ASM IN FILE"); break;
             case LOADING_PROGRAM_ERROR: printf("ERROR LOADING PROGRAM FILE\n"); break;
             case EXPORTING_BINARY_ERROR: printf("ERROR EXPORTING BINARY FILE\n"); break;
             case SYNTAX_ERROR: printf("SYNTAX ERROR, '%s' IS AN INVALID TOKEN\n",assembler->program.invalidToken.c_str()); break;
@@ -24,7 +25,7 @@ void inspectErrors(Assembler *assembler){ // list errors if any
 }
 void inspectSymbolTable(Assembler *assembler){ // list all labels
     if (assembler->program.symbolTable.empty()) {
-        SetConsoleTextAttribute(assembler->col, PINK);
+        SetConsoleTextAttribute(assembler->col, YELLOW);
         printf("\n===========SYMBOL TABLE EMPTY============");
         SetConsoleTextAttribute(assembler->col, DEFAULT_WHITE);
     } else {
@@ -42,7 +43,7 @@ void inspectSymbolTable(Assembler *assembler){ // list all labels
 void inspectBinary(Assembler *assembler){ // print binary output in hex
     if (assembler->program.machineCode.empty()){
         SetConsoleTextAttribute(assembler->col, RED);
-        printf("\n========NO BINARY GENERATED=======");
+        printf("\n===========NO BINARY GENERATED===========");
         SetConsoleTextAttribute(assembler->col, DEFAULT_WHITE);
     } else {
         SetConsoleTextAttribute(assembler->col, YELLOW);

@@ -1,13 +1,12 @@
 #pragma once 
 
 #include "config.h"
-#include "ALU.h"
-#include "memory.h"
-#include "control_unit.h"
 
-// DEBUGGING CPU _____________________________________________________________________________
 void showMetrics(CPU*cpu){
-    printf(ANSI_YELLOW"\nPROGRAM COMPLETED %d CYCLES IN %f SECONDS"ANSI_RESET,cpu->metrics.cycles, cpu->metrics.exetime);
+    printf(ANSI_YELLOW"\nPROGRAM SIZE: \e[1;93m%d "ANSI_RESET,cpu->metrics.bytesInProgram);
+    printf(ANSI_YELLOW"BYTES\nCOMPLETED \e[1;93m%d "ANSI_RESET, cpu->metrics.cycles);
+    printf(ANSI_YELLOW"CYCLES IN \e[1;93m%f "ANSI_RESET,cpu->metrics.exetime); 
+    printf(ANSI_YELLOW"SECONDS"ANSI_RESET);
 }
 void showFatalErrors(CPU*cpu){
     if (cpu->fatalError==NONE) {
@@ -53,23 +52,15 @@ void inspectRegisters(CPU*cpu){
 }
 void inspectPC(CPU*cpu){
      printf(ANSI_BOLD_WHITE"\n   %d    "ANSI_RESET, cpu->metrics.cycles);
-    printf("%d  ->  ",cpu->programCounter); 
+    printf("%d  \x1b[33m->\x1b[0m  ",cpu->programCounter); 
     printf("0x%02X     ",cpu->instructionReg[0]);
     for ( int i=1; i<4; i++) {
         if (cpu->instructionReg[0] == HALT) printf("0x00 ");
         else printf("0x%02X ",cpu->instructionReg[i]);
     }
 }
-
-// RUNNING CPU ___________________________________________________________________
-void initCPU(CPU*cpu) {
-    if (SHOW_PC) printf(ANSI_YELLOW"\n=CYCLE==PC====OPCODE=======OPERANDS======="ANSI_RESET);
-    initCtrlUnit(cpu);
-    loadProgram(cpu);
-}
-void runCPU(CPU*cpu) {
-    cpuFetch(cpu); 
-    cpu->metrics.cycles++;    
-    cpuDecodeExecute(cpu);
-    if (SHOW_PC) inspectPC(cpu);
+void inspectFlags(CPU*cpu) {
+    printf(ANSI_YELLOW"\n=====ZRO======OFW======NEG======ERR======"ANSI_RESET);
+    printf("\n\x1b[33mFLAGS\x1b[0m %d        %d        %d        %d",cpu->zeroFlag,cpu->overflowFlag,cpu->negativeFlag,cpu->errorFlag);
+    printf(ANSI_YELLOW"\n========================================="ANSI_RESET);
 }

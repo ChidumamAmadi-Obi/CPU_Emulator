@@ -3,25 +3,14 @@
 #include "config.hpp"
 
 void loadProgram(Assembler *assembler){ // loads program from external file and stores in string
-    /* BUG NEED TO FIX 
-    seems when valid assembly is writtenon the first line of the
-    file it deletes it, need to fix
-    */
-    ifstream f("program.asm");
-    
-    if (!f.is_open()) {
-        assembler->errorCode = LOADING_PROGRAM_ERROR;
-        return;
-    }
-
+    ifstream asmFile("program.asm");
     string line="";
-
-    if (!getline(f,line)) {
-        assembler->errorCode = LOADING_PROGRAM_ERROR;
-        return;
+    
+    if (!asmFile.is_open()) {
+        assembler->errorCode = LOADING_PROGRAM_ERROR; return;
     }
 
-    while (getline(f, line)) {
+    while (getline(asmFile, line)) {
         size_t firstNonSpace = line.find_first_not_of(" \t"); 
 
         if (line.empty()) continue; // skip empty lines
@@ -37,7 +26,12 @@ void loadProgram(Assembler *assembler){ // loads program from external file and 
         if (DEBUG_RAW_ASM) printf("%s\n", line.c_str());
         assembler->program.rawAsm += line + " ";
     }
-    f.close();
+
+    if (assembler->program.rawAsm.empty()) {
+        assembler->errorCode = NO_ASM_ERROR; return;
+    }
+
+    asmFile.close();
 }
 
 void exportMachineCode(Assembler *assembler){

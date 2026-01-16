@@ -54,7 +54,10 @@ typedef enum{
     ORI,
     XORI,
     EQUI,
-    DIVI
+    DIVI,
+    CALL,
+    RET
+
 }Mnemonics;
 typedef enum{
     R0,
@@ -94,6 +97,7 @@ typedef enum{ // if error program should stop immediatly
     NONE,
     SYNTAX_ERROR,
     LOADING_PROGRAM_ERROR,
+    NO_ASM_ERROR,
     EXPORTING_BINARY_ERROR,
     SYMBOL_ERROR,
     BIN_GEN_ERROR
@@ -158,7 +162,10 @@ typedef struct{
         {"OR",ORI},
         {"XORI",XORI},
         {"EQUI",EQUI},
-        {"DIVI",DIVI}};
+        {"DIVI",DIVI},
+        {"CALL", CALL},
+        {"RET", RET}};
+
     unordered_map<string,Registers> regMap = {
         {"r0", R0},
         {"r1",R1},

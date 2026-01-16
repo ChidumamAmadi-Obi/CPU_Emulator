@@ -3,12 +3,14 @@
 #include "config.hpp"
 
 // FOR FIRST PASS _________________________________________________________________________________________________
-bool isLabel(string pastToken){ // checks if token is an nudefined label. else returns false
-    if((pastToken.compare("JMP") == 0 ||
+bool isLabel(string pastToken){ // checks if token is an nudefined label or subroutine. else returns false
+    if((pastToken.compare("CALL") == 0 ||
         pastToken.compare("JMP_ABV") == 0 ||
         pastToken.compare("JMP_ZRO") == 0 ||
         pastToken.compare("JMP_OFW") == 0 ||
-        pastToken.compare("JMP_NEG") == 0)){ return true;
+        pastToken.compare("JMP_NEG") == 0 ||
+        pastToken.compare("JMP"))) 
+        { return true;
     } return false;
 }
 bool isNumber(string token) { // checks if number is in desired format, else returns false
@@ -76,7 +78,7 @@ int16_t handleInt(Assembler *assembler,string token){ // checks for correct lite
         }
     } return INVALID_LITERAL; // if invalid
 }
-int8_t getLabelLocation(Assembler *assembler, string label) { // returns location of label to be replaced
+int8_t getLabelLocation(Assembler *assembler, string label) { // returns location of label or start of subroutine to be replaced
     if(assembler->program.symbolTable.find(label) == assembler->program.symbolTable.end()){ 
         return INVALID;
     } return assembler->program.symbolTable[label];

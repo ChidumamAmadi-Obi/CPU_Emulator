@@ -10,7 +10,8 @@
 // debugging
 #define SHOW_ERRORS 1
 #define SHOW_RAM 0
-#define SHOW_REGISTERS 1
+#define SHOW_REGISTERS 2
+#define SHOW_FLAGS 0
 #define SHOW_PC 1 // print each executed instruction
 #define SHOW_METRICS 1 // print execution time and completed cycles
 
@@ -19,16 +20,18 @@
 #define DEBUG_EXECUTE 0
 #define PRINT_ALU_ERRORS 0
 
+// colors
 #define ANSI_RED     "\x1b[31m"
 #define ANSI_GREEN   "\x1b[32m"
 #define ANSI_YELLOW  "\x1b[33m"
 #define ANSI_BLUE    "\x1b[34m"
 #define ANSI_MAGENTA "\x1b[35m"
 #define ANSI_CYAN    "\x1b[36m"
-#define ANSI_RESET   "\x1b[0m"
 #define ANSI_BOLD_WHITE "\e[1;37m"
 #define ANSI_BOLD_GREEN "\e[1;32m"
 #define ANSI_BOLD_RED  "\e[1;31m"
+#define ANSI_BOLD_YELLOW "\e[1;93m"
+#define ANSI_RESET   "\x1b[0m"
 
 // alu constants
 #define MSB 0x80
@@ -38,6 +41,7 @@
 
 // memory constants
 #define RAM_SIZE 0xFF
+#define ROM_SIZE RAM_SIZE/2
 #define INST_LENGTH 4 // each instruction has a maximum length of 4 bytes
 #define CPU_REG_NO 16
 
@@ -74,7 +78,10 @@ typedef enum{
     ORI,
     XORI,
     EQUI,
-    DIVI
+    DIVI,
+    CALL,
+    RET
+
 }CPUInstruction;
 typedef enum{
     R0,
@@ -140,10 +147,17 @@ typedef enum{ // stop running cpu if one of these errors show up
     ERROR_MEMORY_OUT_OF_BOUNDS,
     ERROR_INVALID_ARITHMETIC_OPERATION
 }FatalErrors;
+typedef enum{
+    CHECK_IF_IN_ROM,
+    CHECK_IF_IN_RAM,
+    CHECK_IF_VALID_REGISTER,
+    CHECK_IF_VALID_POINTER
+}MemoryBoundsChecking;
 
 typedef struct{ // records metrics
     uint32_t cycles;
     uint32_t executedInstructions;
+    size_t bytesInProgram; // stores program size in bytes
     double exetime;
 }Preformance;
 typedef struct{ // alu results
@@ -155,12 +169,13 @@ typedef struct{ // alu results
 typedef struct{ // CPU variables
     ALUResults alu;
     Preformance metrics;
+    uint32_t programCounter; // tracks byte position in ram
+    uint32_t nextInst; // location of next instruction after subroutine is called
     uint8_t fatalError;
     uint8_t instructionReg[INST_LENGTH];
     uint8_t gpRegs[CPU_REG_NO];
     uint8_t ram[RAM_SIZE];  
-    uint16_t programCounter; // tracks byte position in ram
-
+    
     bool errorFlag; // alu flags
     bool zeroFlag;
     bool overflowFlag;

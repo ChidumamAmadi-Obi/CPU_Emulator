@@ -46,7 +46,7 @@ void passOne(Assembler *assembler) { // check syntax and get labels w their loca
             gSyntax=true; 
 
         } else if (token.back() == ':') { // check if its a label
-            string labelName = token.substr(0, token.size() - 1);// Check if label name is reserved
+            string labelName = token.substr(0, token.size() - 1);// Check if label or subroutine name is reserved
             
             if (compareMaps.mnemonicMap.find(labelName) != compareMaps.mnemonicMap.end() ||
                 compareMaps.regMap.find(labelName) != compareMaps.regMap.end()) {
@@ -61,7 +61,7 @@ void passOne(Assembler *assembler) { // check syntax and get labels w their loca
         } else if (assembler->program.symbolTable.find(token) != assembler->program.symbolTable.end()){
             gSyntax=true; // if label has been defined in symbol table
 
-        } else if (isLabel(pastToken)) {// if undefined label, will check if label actually exists in second pass
+        } else if (isLabel(pastToken)) {// if undefined label or subroutine, will check if label actually exists in second pass
             gSyntax=true; 
             assembler->program.symbolTable[token]=UNDEFINED_LABEL;
         }
