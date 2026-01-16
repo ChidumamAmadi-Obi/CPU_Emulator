@@ -28,4 +28,4 @@
 | EQUI | 0x18 | `EQUI rd rs1 val` | Compare register with immediate value |
 | DIVI | 0x19 | `DIVI rd rs1 val` | Divide register by immediate value |
 | CALL | 0x1A | `CALL addr` | Record current value of PC and jump to start of subroutine |
-| DIVI | 0x1B | `RET` | Return to address of CALL function |
+| RET | 0x1B | `RET` | Return to address of CALL function |
