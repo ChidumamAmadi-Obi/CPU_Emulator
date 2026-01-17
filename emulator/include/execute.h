@@ -8,21 +8,21 @@ bool isInMemoryBounds(int memLocation,MemoryBoundsChecking loc){
     switch(loc){
         case CHECK_IF_IN_RAM:
             if (memLocation > ROM_SIZE && memLocation <= RAM_SIZE)
-            return 1;
+            return 1; break;
 
         case CHECK_IF_IN_ROM:
             if (memLocation >= 0 && memLocation < ROM_SIZE)
-            return 1;
+            return 1; break;
 
         case CHECK_IF_VALID_REGISTER:
             if (memLocation >= 0 && memLocation <= CPU_REG_NO)
-            return 1;
+            return 1; break;
 
         case CHECK_IF_VALID_POINTER:
             if (memLocation >= PTR_R0 && memLocation <= PTR_R15)
-            return 1;
+            return 1; break;
 
-        default: return 0;
+        default: return 0; break;
     }
     return 0;
 }
@@ -96,19 +96,19 @@ void jumpInst(CPU*cpu) { // overrite ram ptr, will jump to instruction in memory
     }
 
     switch(cpu->instructionReg[0]) {
-        case JMP_ABV: if (!cpu->negativeFlag && !cpu->zeroFlag) cpu->programCounter=destination; return;
-        case JMP_NEG: if (cpu->negativeFlag)                    cpu->programCounter=destination; return;
-        case JMP_OFW: if (cpu->overflowFlag)                    cpu->programCounter=destination; return;
-        case JMP_ZRO: if (cpu->zeroFlag)                        cpu->programCounter=destination; return;
+        case JMP_ABV: if (!cpu->negativeFlag && !cpu->zeroFlag) cpu->programCounter=destination; break;
+        case JMP_NEG: if (cpu->negativeFlag)                    cpu->programCounter=destination; break;
+        case JMP_OFW: if (cpu->overflowFlag)                    cpu->programCounter=destination; break;
+        case JMP_ZRO: if (cpu->zeroFlag)                        cpu->programCounter=destination; break;
 
-        case JMP: cpu->programCounter=destination; return;
-        case RET: cpu->programCounter=cpu->nextInst;  return; // return from subroutine
+        case JMP: cpu->programCounter=destination; break;
+        case RET: cpu->programCounter=cpu->nextInst; break;// return from subroutine
         case CALL: 
             cpu->nextInst = cpu->programCounter; // stores location of next instruction
             cpu->programCounter=destination; // jumps to start of subroutine
-            return;
+            break;
 
-        default:  cpu->fatalError=ERROR_EXECUTING_INTRUCTION; return;
+        default:  cpu->fatalError=ERROR_EXECUTING_INTRUCTION; break;
     }
 }
 

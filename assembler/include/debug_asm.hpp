@@ -1,12 +1,12 @@
 #pragma once
 
 #include "config.hpp"
+#include "color.h"
 
 void inspectErrors(Assembler *assembler){ // list errors if any
     ProgramErrors error = assembler->errorCode;
     if (error != NONE) {
-        SetConsoleTextAttribute(assembler->col, RED);
-        printf("\n\nPROGRAM EXITED WITH ERROR CODE: %d\n", error);
+        COLOR_BOLD_RED; printf("\n\nPROGRAM EXITED WITH ERROR CODE: %d\n", error); COLOR_RED;
         switch(error) {
             case NO_ASM_ERROR: printf("ERROR NO ASM IN FILE"); break;
             case LOADING_PROGRAM_ERROR: printf("ERROR LOADING PROGRAM FILE\n"); break;
@@ -16,47 +16,36 @@ void inspectErrors(Assembler *assembler){ // list errors if any
             case BIN_GEN_ERROR: printf("ERROR GENERATING BINARY FILE\n"); break;
             default: break;
         }
-        SetConsoleTextAttribute(assembler->col, DEFAULT_WHITE);
-    } else {
-        SetConsoleTextAttribute(assembler->col, CYAN);
-        printf("\nPROGRAM EXITED WITH ZERO ERRORS :]\n\n");
-        SetConsoleTextAttribute(assembler->col, DEFAULT_WHITE);
-    }
+        COLOR_RESET;
+    } else COLOR_BOLD_GREEN; printf("\nPROGRAM EXITED WITH ZERO ERRORS :]\n\n"); COLOR_RESET;
 }
 void inspectSymbolTable(Assembler *assembler){ // list all labels
     if (assembler->program.symbolTable.empty()) {
-        SetConsoleTextAttribute(assembler->col, YELLOW);
-        printf("\n===========SYMBOL TABLE EMPTY============");
-        SetConsoleTextAttribute(assembler->col, DEFAULT_WHITE);
+       COLOR_YELLOW; printf("\n===========SYMBOL TABLE EMPTY============"); COLOR_RESET;
     } else {
-        SetConsoleTextAttribute(assembler->col, YELLOW);
-        printf("\n==============SYMBOL TABLE==============\n");
-        SetConsoleTextAttribute(assembler->col, DEFAULT_WHITE);
+        COLOR_YELLOW; printf("\n==============SYMBOL TABLE==============\n"); COLOR_RESET;
         for (auto i : assembler->program.symbolTable){
-            printf(" \e[1;37mLABEL:\e[0m '%s' -> \e[1;37mLOCATION:\e[0m %d\n",i.first.c_str(), i.second);
+            COLOR_BOLD_WHITE; printf(" LABEL:"); COLOR_RESET;
+            printf(" '%s' -> ",i.first.c_str());
+            COLOR_BOLD_WHITE; printf("LOCATION:"); COLOR_RESET;
+            printf(" %d\n", i.second);
         } 
-        SetConsoleTextAttribute(assembler->col, YELLOW);
-        printf("========================================");
-        SetConsoleTextAttribute(assembler->col, DEFAULT_WHITE);
+        COLOR_YELLOW; printf("========================================"); COLOR_RESET;
     } 
 }
 void inspectBinary(Assembler *assembler){ // print binary output in hex
     if (assembler->program.machineCode.empty()){
-        SetConsoleTextAttribute(assembler->col, RED);
-        printf("\n===========NO BINARY GENERATED===========");
-        SetConsoleTextAttribute(assembler->col, DEFAULT_WHITE);
+        COLOR_RED; printf("\n===========NO BINARY GENERATED==========="); COLOR_RESET;
     } else {
-        SetConsoleTextAttribute(assembler->col, YELLOW);
-        printf("\n==============BINARY OUTPUT=============\n");
-        SetConsoleTextAttribute(assembler->col, DEFAULT_WHITE);
+        COLOR_YELLOW; printf("\n==============BINARY OUTPUT=============\n"); COLOR_RESET;
         for (int i=0; i<assembler->program.machineCode.size(); i++){
             printf(" 0x%02X",assembler->program.machineCode[i]);
             if ((i+1)%8 == 0) printf("\n");
         }
-        SetConsoleTextAttribute(assembler->col, YELLOW);
+        COLOR_YELLOW;
         printf("\n PROGRAM SIZE %d BYTES",assembler->program.sizeOfProgam);
         printf("\n========================================");
-        SetConsoleTextAttribute(assembler->col, DEFAULT_WHITE);
+        COLOR_RESET;
     } 
 }
 

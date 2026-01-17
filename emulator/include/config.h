@@ -7,31 +7,17 @@
 #include <string.h>
 #include <time.h>
 
+#include "color.h"
+
 // debugging
 #define SHOW_ERRORS 1
 #define SHOW_RAM 0
-#define SHOW_REGISTERS 2
+#define SHOW_REGISTERS 1
 #define SHOW_FLAGS 0
 #define SHOW_PC 1 // print each executed instruction
 #define SHOW_METRICS 1 // print execution time and completed cycles
 
-#define DEBUG_FETCH 0
-#define DEBUG_DECODE 0
-#define DEBUG_EXECUTE 0
 #define PRINT_ALU_ERRORS 0
-
-// colors
-#define ANSI_RED     "\x1b[31m"
-#define ANSI_GREEN   "\x1b[32m"
-#define ANSI_YELLOW  "\x1b[33m"
-#define ANSI_BLUE    "\x1b[34m"
-#define ANSI_MAGENTA "\x1b[35m"
-#define ANSI_CYAN    "\x1b[36m"
-#define ANSI_BOLD_WHITE "\e[1;37m"
-#define ANSI_BOLD_GREEN "\e[1;32m"
-#define ANSI_BOLD_RED  "\e[1;31m"
-#define ANSI_BOLD_YELLOW "\e[1;93m"
-#define ANSI_RESET   "\x1b[0m"
 
 // alu constants
 #define MSB 0x80
@@ -40,7 +26,7 @@
 #define MIN_NUMBER -128
 
 // memory constants
-#define RAM_SIZE 0xFF
+#define RAM_SIZE 0xFF // 255 bytes
 #define ROM_SIZE RAM_SIZE/2
 #define INST_LENGTH 4 // each instruction has a maximum length of 4 bytes
 #define CPU_REG_NO 16

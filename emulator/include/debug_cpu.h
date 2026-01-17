@@ -3,55 +3,55 @@
 #include "config.h"
 
 void showMetrics(CPU*cpu){
-    printf(ANSI_YELLOW"\nPROGRAM SIZE: \e[1;93m%d "ANSI_RESET,cpu->metrics.bytesInProgram);
-    printf(ANSI_YELLOW"BYTES\nCOMPLETED \e[1;93m%d "ANSI_RESET, cpu->metrics.cycles);
-    printf(ANSI_YELLOW"CYCLES IN \e[1;93m%f "ANSI_RESET,cpu->metrics.exetime); 
-    printf(ANSI_YELLOW"SECONDS"ANSI_RESET);
+    COLOR_YELLOW; printf("\nPROGRAM SIZE: \e[1;93m%d",cpu->metrics.bytesInProgram); COLOR_RESET;
+    COLOR_YELLOW; printf("/%d BYTES\nCOMPLETED \e[1;93m%d ",ROM_SIZE, cpu->metrics.cycles); COLOR_RESET;
+    COLOR_YELLOW; printf("CYCLES IN \e[1;93m%f ",cpu->metrics.exetime); COLOR_RESET;
+    COLOR_YELLOW; printf("SECONDS"); COLOR_RESET;
 }
 void showFatalErrors(CPU*cpu){
     if (cpu->fatalError==NONE) {
-        printf(ANSI_BOLD_GREEN"\nEXECUTED PROGRAM WITH ZERO ERRORS :]"ANSI_RESET);
+        COLOR_BOLD_GREEN; printf("\nEXECUTED PROGRAM WITH ZERO ERRORS :]"); COLOR_RESET;
         return;
     }
 
-    printf(ANSI_BOLD_RED"\n\nPROGRAM EXITED WITH ERROR CODE %d"ANSI_RESET, cpu->fatalError);
+    COLOR_BOLD_RED; printf("\n\nPROGRAM EXITED WITH ERROR CODE %d", cpu->fatalError); COLOR_RESET;
     switch(cpu->fatalError) {
-        case ERROR_LOADING_PROGRAM:              printf(ANSI_RED"\nERROR, LOADING PROGRAM"ANSI_RESET); break;
-        case ERROR_FETCHING_INSTRUCTION:         printf(ANSI_RED"\nERROR, FETCHING INSTRUCTION %d"ANSI_RESET, cpu->programCounter); break;
-        case ERROR_DECODING_INSTRUCTION:         printf(ANSI_RED"\nERROR, DECODING INSTRUCTOIN %d"ANSI_RESET, cpu->programCounter); break;
-        case ERROR_EXECUTING_INTRUCTION:         printf(ANSI_RED"\nERROR, EXECUTING INSTRUCTION %d"ANSI_RESET, cpu->programCounter); break;
-        case ERROR_MEMORY_OUT_OF_BOUNDS:         printf(ANSI_RED"\nERROR, PROGRAM ATTEPTE TO ACCESS MEMORY OUT OF BOUNDS"ANSI_RESET); break;
-        case ERROR_INVALID_ARITHMETIC_OPERATION: printf(ANSI_RED"\nERROR, PROGRAM ATTEMPTED TO EXECUTE INVALID ARITHMETIC INSTRUCTION"ANSI_RESET); break;
-        case ERROR_PROGRAM_SIZE:                 printf(ANSI_RED"\nERROR, PROGRAM SIZE TOO LARGE"ANSI_RESET);
-        default:                                 printf(ANSI_RED"\nUNKNOWN FATAL ERROR OCCURED"ANSI_RESET);return;
+        case ERROR_LOADING_PROGRAM:             COLOR_RED; printf("\nUNABLE TO LOAD PROGRAM"); COLOR_RESET; break;
+        case ERROR_FETCHING_INSTRUCTION:        COLOR_RED; printf("\nUNABLE TO FETCH INSTRUCTION PC: %d", cpu->programCounter); COLOR_RESET; break;
+        case ERROR_DECODING_INSTRUCTION:        COLOR_RED; printf("\nUNABLE TO DECODE INSTRUCTION PC: %d", cpu->programCounter); COLOR_RESET; break;
+        case ERROR_EXECUTING_INTRUCTION:        COLOR_RED; printf("\nUNABLE TO EXECUTE INSTRUCTION PC: %d", cpu->programCounter); COLOR_RESET; break;
+        case ERROR_MEMORY_OUT_OF_BOUNDS:        COLOR_RED; printf("\nPROGRAM ATTEMPTED TO ACCESS MEMORY OUT OF BOUNDS, PC: %d",cpu->programCounter); COLOR_RESET; break;
+        case ERROR_INVALID_ARITHMETIC_OPERATION:COLOR_RED; printf("\nPROGRAM ATTEMPTED TO EXECUTE INVALID ARITHMETIC INSTRUCTION"); COLOR_RESET; break;
+        case ERROR_PROGRAM_SIZE:                COLOR_RED; printf("\nPROGRAM SIZE TOO LARGE"); COLOR_RESET; break;
+        default:                                COLOR_BOLD_RED; printf("\nUNKNOWN FATAL ERROR OCCURED"); COLOR_RESET; break;
     }
 
 }
 void inspectRam(CPU*cpu){
-    printf(ANSI_YELLOW"\n=================CPU RAM=================\n"ANSI_RESET);
+   COLOR_YELLOW; printf("\n=================CPU RAM=================\n"); COLOR_RESET;
     for (int i=0; i<RAM_SIZE; i++) {
         if ((i+1)%8 == 0) printf("\n"); // print in rows of 8 bytes
         printf(" 0x%02X",cpu->ram[i]);
     }
-    printf(ANSI_YELLOW"\n========================================="ANSI_RESET);
+   COLOR_YELLOW; printf("\n========================================="); COLOR_RESET;
 }
 void inspectRegisters(CPU*cpu){
-    printf(ANSI_YELLOW"\n================REGISTERS================\n"ANSI_RESET);
+   COLOR_YELLOW; printf("\n================REGISTERS================\n"); COLOR_RESET;
     for (int i=0; i<CPU_REG_NO; i++) {
         
         if( i<10 )  {
-            printf(ANSI_BOLD_WHITE" R%d:   "ANSI_RESET,i); 
+            COLOR_BOLD_WHITE; printf(" R%d:   ",i); COLOR_RESET;
             printf("0x%02X",cpu->gpRegs[i]); 
         } else{
-            printf(ANSI_BOLD_WHITE" R%d:  "ANSI_RESET,i); 
+            COLOR_BOLD_WHITE; printf(" R%d:  ",i); COLOR_RESET;
             printf("0x%02X",cpu->gpRegs[i]);
         }   
         if ((i+1) % 4 == 0) printf("\n"); // print in rows of 4
     }
-    printf(ANSI_YELLOW"========================================="ANSI_RESET);
+    COLOR_YELLOW; printf("========================================="); COLOR_RESET;
 }
 void inspectPC(CPU*cpu){
-     printf(ANSI_BOLD_WHITE"\n   %d    "ANSI_RESET, cpu->metrics.cycles);
+    COLOR_BOLD_WHITE; printf("\n   %d    ", cpu->metrics.cycles); COLOR_RESET;
     printf("%d  \x1b[33m->\x1b[0m  ",cpu->programCounter); 
     printf("0x%02X     ",cpu->instructionReg[0]);
     for ( int i=1; i<4; i++) {
@@ -60,7 +60,7 @@ void inspectPC(CPU*cpu){
     }
 }
 void inspectFlags(CPU*cpu) {
-    printf(ANSI_YELLOW"\n=====ZRO======OFW======NEG======ERR======"ANSI_RESET);
+    COLOR_YELLOW; printf("\n=====ZRO======OFW======NEG======ERR======"); COLOR_RESET;
     printf("\n\x1b[33mFLAGS\x1b[0m %d        %d        %d        %d",cpu->zeroFlag,cpu->overflowFlag,cpu->negativeFlag,cpu->errorFlag);
-    printf(ANSI_YELLOW"\n========================================="ANSI_RESET);
+    COLOR_YELLOW; printf("\n========================================="); COLOR_RESET;
 }

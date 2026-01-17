@@ -1,15 +1,15 @@
 #pragma once 
 
-#include <bits/stdc++.h>
-#include <unordered_map> // to use hashmaps
+#include <fstream>
+#include <sstream>
+#include <unordered_map> 
 #include <vector>
 #include <iostream>
 
 #include <stdio.h>
 #include <stdlib.h>
-#include <windows.h> // for pretty terminal colors in windows
 
-// configure 
+// configure debug mode
 #define SHOW_ERRORS 1
 #define SHOW_SYMBOL_TABLE 1
 #define SHOW_GENERATED_BINARY 1
@@ -102,30 +102,13 @@ typedef enum{ // if error program should stop immediatly
     SYMBOL_ERROR,
     BIN_GEN_ERROR
 }ProgramErrors;
-typedef enum{
-    BLUE=1,
-    GREEN=2,
-    CYAN=3,
-    RED=4,
-    PURPLE=5,
-    DARK_YELLOW=6,
-    DEFAULT_WHITE=7,
-    GREY=8,
-    BRIGHT_BLUE=9,
-    BRIGHT_GREEN=10,
-    BRIGHT_CYAN=11,
-    BRIGHT_RED=12,
-    PINK=13,
-    YELLOW=14,
-    BRIGHT_WHITE=15,
-}TerminalColors;
 
 //_________________________________________________________________________________________________
 typedef struct{
     string rawAsm = "";
     string invalidToken="";
     string invalidLabel="";
-    uint16_t sizeOfProgam=0; // size of program in bytes
+    uint32_t sizeOfProgam=0; // size of program in bytes
     vector <string> tokens;
     vector <uint8_t> machineCode; // each token will take up 8 bytes
     unordered_map<string,int8_t> symbolTable; 
@@ -133,7 +116,6 @@ typedef struct{
 typedef struct{
     Program program;
     ProgramErrors errorCode = NONE;
-    HANDLE col = GetStdHandle(STD_OUTPUT_HANDLE); // for changing terminal colors
 }Assembler;
 typedef struct{
     unordered_map<string,Mnemonics> mnemonicMap = {
