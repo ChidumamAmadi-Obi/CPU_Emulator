@@ -4,6 +4,8 @@ Lightweight, modular 8-bit CPU emulator with a multiple-pass assembler written i
 ### CPU Emulator & Assembler Demo
 https://github.com/user-attachments/assets/75f93fe8-73d6-4d27-a5fe-8988b23c65bf
 
+*NOTE: Has only been tested on windows 11*
+
 ### Features 
 **CPU Emulator**
  * Signed 8-bit arithmetic with overflow detection
