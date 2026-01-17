@@ -25,9 +25,13 @@ https://github.com/user-attachments/assets/75f93fe8-73d6-4d27-a5fe-8988b23c65bf
 
 ### How to Run on Your Machine
    **1.** Clone Repo <br>
-   **2.** Modify the file ```program.asm``` to run your own assembly instructions 
+   **2.** Modify the file ```program.asm``` to run your own assembly instructions <br>
    **3.** Build and run CPU Emulator and Assembler 
    ``` bash
+    # build and run with make
+    make run
+
+    # build and run manually
     g++ -Iassembler/include -o assembler assembler/src/*.cpp
     ./assembler
     gcc -Iemulator/include -o emulator emulator/src/*.c  
