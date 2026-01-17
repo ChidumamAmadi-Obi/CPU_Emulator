@@ -11,7 +11,7 @@ bool isInMemoryBounds(int memLocation,MemoryBoundsChecking loc){
             return 1; break;
 
         case CHECK_IF_IN_ROM:
-            if (memLocation >= 0 && memLocation < ROM_SIZE)
+            if (memLocation >= 0 && memLocation <= ROM_SIZE)
             return 1; break;
 
         case CHECK_IF_VALID_REGISTER:

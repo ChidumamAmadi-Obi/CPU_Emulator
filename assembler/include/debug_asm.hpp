@@ -3,20 +3,21 @@
 #include "config.hpp"
 
 void inspectErrors(Assembler *assembler){ // list errors if any
-    ProgramErrors error = assembler->errorCode;
-    if (error != NONE) {
-        COLOR_BOLD_RED; printf("\n\nPROGRAM EXITED WITH ERROR CODE: %d\n", error); COLOR_RED;
-        switch(error) {
-            case NO_ASM_ERROR: printf("ERROR NO ASM IN FILE"); break;
-            case LOADING_PROGRAM_ERROR: printf("ERROR LOADING PROGRAM FILE\n"); break;
-            case EXPORTING_BINARY_ERROR: printf("ERROR EXPORTING BINARY FILE\n"); break;
-            case SYNTAX_ERROR: printf("SYNTAX ERROR, '%s' IS AN INVALID TOKEN\n",assembler->program.invalidToken.c_str()); break;
-            case SYMBOL_ERROR: printf("SYMBOL TABLE ERROR, LABEL '%s' IS UNDEFINED\n",assembler->program.invalidLabel.c_str()); break;
-            case BIN_GEN_ERROR: printf("ERROR GENERATING BINARY FILE\n"); break;
-            default: break;
-        }
-        COLOR_RESET;
-    } else COLOR_BOLD_GREEN; printf("\nPROGRAM EXITED WITH ZERO ERRORS :]\n\n"); COLOR_RESET;
+    if (assembler->errorCode == NONE) {
+        COLOR_BOLD_GREEN; printf("\n\nPROGRAM EXITED WITH ZERO ERRORS :]\n"); COLOR_RESET;
+        return;
+    }
+    COLOR_BOLD_RED; printf("\n\nPROGRAM EXITED WITH ERROR CODE: %d\n", assembler->errorCode); COLOR_RED;
+    switch(assembler->errorCode) {
+        case NO_ASM_ERROR: printf("ERROR NO ASM IN FILE"); break;
+        case LOADING_PROGRAM_ERROR: printf("ERROR LOADING PROGRAM FILE\n"); break;
+        case EXPORTING_BINARY_ERROR: printf("ERROR EXPORTING BINARY FILE\n"); break;
+        case SYNTAX_ERROR: printf("SYNTAX ERROR, '%s' IS AN INVALID TOKEN\n",assembler->program.invalidToken.c_str()); break;
+        case SYMBOL_ERROR: printf("SYMBOL TABLE ERROR, LABEL '%s' IS UNDEFINED\n",assembler->program.invalidLabel.c_str()); break;
+        case BIN_GEN_ERROR: printf("ERROR GENERATING BINARY FILE\n"); break;
+        default: break;
+    }
+    COLOR_RESET; 
 }
 void inspectSymbolTable(Assembler *assembler){ // list all labels
     if (assembler->program.symbolTable.empty()) {
