@@ -3,9 +3,9 @@
 #include "config.h"
 
 void showMetrics(CPU*cpu){
-    COLOR_YELLOW; printf("\nPROGRAM SIZE: \e[1;93m%d",cpu->metrics.bytesInProgram); COLOR_RESET;
-    COLOR_YELLOW; printf("/%d BYTES\nCOMPLETED \e[1;93m%d ",ROM_SIZE, cpu->metrics.cycles); COLOR_RESET;
-    COLOR_YELLOW; printf("CYCLES IN \e[1;93m%f ",cpu->metrics.exetime); COLOR_RESET;
+    COLOR_YELLOW; printf("\nPROGRAM SIZE: ");               COLOR_BOLD_YELLOW; printf("%d",cpu->metrics.bytesInProgram);
+    COLOR_YELLOW; printf("/%d BYTES\nCOMPLETED ",ROM_SIZE); COLOR_BOLD_YELLOW; printf("%d ", cpu->metrics.cycles);
+    COLOR_YELLOW; printf("CYCLES IN ");                     COLOR_BOLD_YELLOW; printf("%f ",cpu->metrics.exetime);
     COLOR_YELLOW; printf("SECONDS"); COLOR_RESET;
 }
 void showFatalErrors(CPU*cpu){
@@ -14,18 +14,17 @@ void showFatalErrors(CPU*cpu){
         return;
     }
 
-    COLOR_BOLD_RED; printf("\n\nPROGRAM EXITED WITH ERROR CODE %d", cpu->fatalError); COLOR_RESET;
+    COLOR_BOLD_RED; printf("\n\nPROGRAM EXITED WITH ERROR CODE %d", cpu->fatalError);
     switch(cpu->fatalError) {
-        case ERROR_LOADING_PROGRAM:             COLOR_RED; printf("\nUNABLE TO LOAD PROGRAM"); COLOR_RESET; break;
-        case ERROR_FETCHING_INSTRUCTION:        COLOR_RED; printf("\nUNABLE TO FETCH INSTRUCTION PC: %d", cpu->programCounter); COLOR_RESET; break;
-        case ERROR_DECODING_INSTRUCTION:        COLOR_RED; printf("\nUNABLE TO DECODE INSTRUCTION PC: %d", cpu->programCounter); COLOR_RESET; break;
-        case ERROR_EXECUTING_INTRUCTION:        COLOR_RED; printf("\nUNABLE TO EXECUTE INSTRUCTION PC: %d", cpu->programCounter); COLOR_RESET; break;
-        case ERROR_MEMORY_OUT_OF_BOUNDS:        COLOR_RED; printf("\nPROGRAM ATTEMPTED TO ACCESS MEMORY OUT OF BOUNDS, PC: %d",cpu->programCounter); COLOR_RESET; break;
-        case ERROR_INVALID_ARITHMETIC_OPERATION:COLOR_RED; printf("\nPROGRAM ATTEMPTED TO EXECUTE INVALID ARITHMETIC INSTRUCTION"); COLOR_RESET; break;
-        case ERROR_PROGRAM_SIZE:                COLOR_RED; printf("\nPROGRAM SIZE TOO LARGE"); COLOR_RESET; break;
-        default:                                COLOR_BOLD_RED; printf("\nUNKNOWN FATAL ERROR OCCURED"); COLOR_RESET; break;
-    }
-
+        case ERROR_LOADING_PROGRAM:             COLOR_RED; printf("\nUNABLE TO LOAD PROGRAM"); break;
+        case ERROR_FETCHING_INSTRUCTION:        COLOR_RED; printf("\nUNABLE TO FETCH INSTRUCTION PC: %d", cpu->programCounter);break;
+        case ERROR_DECODING_INSTRUCTION:        COLOR_RED; printf("\nUNABLE TO DECODE INSTRUCTION PC: %d", cpu->programCounter); break;
+        case ERROR_EXECUTING_INTRUCTION:        COLOR_RED; printf("\nUNABLE TO EXECUTE INSTRUCTION PC: %d", cpu->programCounter);break;
+        case ERROR_MEMORY_OUT_OF_BOUNDS:        COLOR_RED; printf("\nPROGRAM ATTEMPTED TO ACCESS MEMORY OUT OF BOUNDS, PC: %d",cpu->programCounter); break;
+        case ERROR_INVALID_ARITHMETIC_OPERATION:COLOR_RED; printf("\nPROGRAM ATTEMPTED TO EXECUTE INVALID ARITHMETIC INSTRUCTION"); break;
+        case ERROR_PROGRAM_SIZE:                COLOR_RED; printf("\nPROGRAM SIZE TOO LARGE"); break;
+        default:                                COLOR_BOLD_RED; printf("\nUNKNOWN FATAL ERROR OCCURED"); break;
+    } COLOR_RESET;
 }
 void inspectRam(CPU*cpu){
    COLOR_YELLOW; printf("\n=================CPU RAM=================\n"); COLOR_RESET;

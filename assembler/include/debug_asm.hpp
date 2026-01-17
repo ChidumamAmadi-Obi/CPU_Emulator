@@ -1,7 +1,6 @@
 #pragma once
 
 #include "config.hpp"
-#include "color.h"
 
 void inspectErrors(Assembler *assembler){ // list errors if any
     ProgramErrors error = assembler->errorCode;

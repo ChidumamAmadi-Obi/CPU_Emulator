@@ -36,5 +36,6 @@ int main(void) {
     if (SHOW_FLAGS) inspectFlags(&cpu);
     if (SHOW_METRICS) showMetrics(&cpu);
     if (SHOW_ERRORS) showFatalErrors(&cpu);
+    
     return 0; 
 }

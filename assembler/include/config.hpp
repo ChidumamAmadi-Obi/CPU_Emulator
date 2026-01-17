@@ -5,9 +5,12 @@
 #include <unordered_map> 
 #include <vector>
 #include <iostream>
+#include <cstdint>
 
 #include <stdio.h>
 #include <stdlib.h>
+
+#include "color.h"
 
 // configure debug mode
 #define SHOW_ERRORS 1
