@@ -23,12 +23,15 @@ https://github.com/user-attachments/assets/75f93fe8-73d6-4d27-a5fe-8988b23c65bf
   * Symbol table generation
   * Has configureable debug output (Symbol table view, Binary out)
 
+*Assembler Pipeline*
+<img width="1639" height="94" alt="image" src="https://github.com/user-attachments/assets/4356c71f-df68-4956-949e-a6f3c8f5e6cb" />
+
 ### How to Run on Your Machine
    **1.** Clone Repo <br>
    **2.** Modify the file ```program.asm``` to run your own assembly instructions <br>
    **3.** Build and run CPU Emulator and Assembler 
    ``` bash
-    # build and run with make
+    # build and run with makefile
     make run
 
     # build and run manually
@@ -75,12 +78,12 @@ https://github.com/user-attachments/assets/75f93fe8-73d6-4d27-a5fe-8988b23c65bf
    <img width="429" height="856" alt="image" src="https://github.com/user-attachments/assets/a85a3f0e-6d8f-45d5-a89c-8d258c495a71" />
    
 ### Preformance
+- **Average CPI:** 1 cycle per instruction
 - **_Fibonacci(8):_** 47 cycles, 21 result 
 - **_5! Factorial:_** 23 cycles, 120 result  
 - **_Sum of Array (4 elements):_** 36 cycles
 - **_Prime Number Checker:_** (coming soon)
 - **_Bubble Sort:_** (coming soon)
-- **Average CPI:** 1 cycle per instruction
 
 ### Roadmaps
 #### CPU Roadmap
