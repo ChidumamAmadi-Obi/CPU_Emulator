@@ -1,9 +1,9 @@
-# HELP _________________________________________________________________________________
+# HELP ______________________________________________________________________________
 # make build <= only builds
 # make run-only <= only runs both in order
 # make run <= builds if needed then runs both in order
 
-# IF YOU WANTED TO BUILD MANUALLY
+# IF YOU WANTED TO BUILD AND RUN MANUALLY ___________________________________________
 # g++ -Iassembler/include -o assembler assembler/src/*.cpp
 # gcc -Iemulator/include -o emulator emulator/src/*.c  
 # ./assembler
@@ -54,7 +54,8 @@ run: $(ASSEMBLER_EXEC) $(EMULATOR_EXEC)
 	./$(EMULATOR_EXEC)
 
 clean: # clean compiled files
-	rm -f $(ASSEMBLER_EXEC) $(EMULATOR_EXEC)
-
+	powershell -Command "Remove-Item -ErrorAction SilentlyContinue -Force $(ASSEMBLER_EXEC).exe, $(EMULATOR_EXEC).exe, *.obj, *.o, *.exe"
+	
 .PHONY: all build run run-only clean
+
 
