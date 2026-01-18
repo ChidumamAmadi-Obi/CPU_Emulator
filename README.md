@@ -24,8 +24,23 @@ https://github.com/user-attachments/assets/8bb39ae9-16c2-4238-ad23-a60aa52ee034
   * Has configureable debug output (Symbol table view, Binary out)
 
 *Assembler Pipeline*
-<img width="1639" height="94" alt="image" src="https://github.com/user-attachments/assets/4356c71f-df68-4956-949e-a6f3c8f5e6cb" />
+```mermaid
+flowchart LR
+A{{.asm file}} -- raw assembly --> B(CLEANER
+removes comments) 
+B -- cleaned assembly string --> C[TOKENIZER
+lexical analysis]
 
+C -- string of tokens --> D[PASS ONE
+symbols & validation]
+  
+D -- Symbol table --> E[PASS TWO
+machine code
+generation]
+D -- Verified tokens --> E
+    
+E -- Machine code --> F{{.bin file}}
+```
 ### How to Run on Your Machine
    **1.** Clone Repo <br>
    **2.** Modify the file ```program.asm``` to run your own assembly instructions <br>
