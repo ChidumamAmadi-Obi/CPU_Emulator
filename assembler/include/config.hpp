@@ -183,16 +183,43 @@ typedef struct{
         {"*r12",PTR_R12},
         {"*r13",PTR_R13},
         {"*r14",PTR_R14},
-        {"*r15",PTR_R15}};
+        {"*r15",PTR_R15},
+        {"R0", R0},
+        {"R1",R1},
+        {"R2",R2},
+        {"R3",R3},
+        {"R4",R4},
+        {"R5",R5},
+        {"R6",R6},
+        {"R7",R7},
+        {"R8",R8},
+        {"R9",R9},
+        {"R10",R10},
+        {"R11",R11},
+        {"R12",R12},
+        {"R13",R13},
+        {"R14",R14},
+        {"R15",R15},
+        {"*R0",PTR_R0},
+        {"*R1",PTR_R1},
+        {"*R2",PTR_R2},
+        {"*R3",PTR_R3},
+        {"*R4",PTR_R4},
+        {"*R5",PTR_R5},
+        {"*R6",PTR_R6},
+        {"*R7",PTR_R7},
+        {"*R8",PTR_R8},
+        {"*R9",PTR_R9},
+        {"*R10",PTR_R10},
+        {"*R11",PTR_R11},
+        {"*R12",PTR_R12},
+        {"*R13",PTR_R13},
+        {"*R14",PTR_R14},
+        {"*R15",PTR_R15}
+    };
 }Maps;
 
 /*
 https://www.geeksforgeeks.org/compiler-design/introduction-of-assembler/
 
-1. + make lexer/tokenizer 
-2. + make symbol table
-3. + first pass ( calc instruction sizes & get label addfresses in symbol table )
-4. + get mnemonics int o machine code
-5. + second pass ( replace mnemonics w opcodes & replace labels w acctual addresses )
-6. + output bin/hex machine code to a file
 */

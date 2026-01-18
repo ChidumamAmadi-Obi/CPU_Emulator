@@ -4,14 +4,13 @@
 
 // FOR FIRST PASS _________________________________________________________________________________________________
 bool isLabel(string pastToken){ // checks if token is an nudefined label or subroutine. else returns false
-    if((pastToken.compare("CALL") == 0 ||
-        pastToken.compare("JMP_ABV") == 0 ||
-        pastToken.compare("JMP_ZRO") == 0 ||
-        pastToken.compare("JMP_OFW") == 0 ||
-        pastToken.compare("JMP_NEG") == 0 ||
-        pastToken.compare("JMP"))) 
-        { return true;
-    } return false;
+    if (pastToken.compare("CALL") == 0) return true;
+    if (pastToken.compare("JMP_ABV") == 0) return true;
+    if (pastToken.compare("JMP_ZRO") == 0) return true;
+    if (pastToken.compare("JMP_OFW") == 0) return true;
+    if (pastToken.compare("JMP_NEG") == 0) return true;
+    if (pastToken.compare("JMP") == 0) return true;
+    return false;
 }
 bool isNumber(string token) { // checks if number is in desired format, else returns false
     if (token.empty()) return false;

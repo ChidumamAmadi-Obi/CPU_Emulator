@@ -3,14 +3,14 @@
 #include "config.h"
 
 void showMetrics(CPU*cpu){
-    COLOR_YELLOW; printf("\nPROGRAM SIZE: ");               COLOR_BOLD_YELLOW; printf("%d",cpu->metrics.bytesInProgram);
-    COLOR_YELLOW; printf("/%d BYTES\nCOMPLETED ",ROM_SIZE); COLOR_BOLD_YELLOW; printf("%d ", cpu->metrics.cycles);
-    COLOR_YELLOW; printf("CYCLES IN ");                     COLOR_BOLD_YELLOW; printf("%f ",cpu->metrics.exetime);
+    COLOR_YELLOW; printf("\nPROGRAM SIZE: "); COLOR_RESET;               COLOR_BOLD_YELLOW; printf("%ld",cpu->metrics.bytesInProgram); COLOR_RESET;
+    COLOR_YELLOW; printf("/%d BYTES\nCOMPLETED ",ROM_SIZE); COLOR_RESET; COLOR_BOLD_YELLOW; printf("%d ", cpu->metrics.cycles); COLOR_RESET;
+    COLOR_YELLOW; printf("CYCLES IN "); COLOR_RESET;                     COLOR_BOLD_YELLOW; printf("%f ",cpu->metrics.exetime); COLOR_RESET;
     COLOR_YELLOW; printf("SECONDS"); COLOR_RESET;
 }
 void showFatalErrors(CPU*cpu){
     if (cpu->fatalError==NONE) {
-        COLOR_BOLD_GREEN; printf("\nEXECUTED PROGRAM WITH ZERO ERRORS :]"); COLOR_RESET;
+        COLOR_BOLD_GREEN; printf("\nEXECUTED PROGRAM WITH ZERO ERRORS :]\n"); COLOR_RESET;
         return;
     }
 

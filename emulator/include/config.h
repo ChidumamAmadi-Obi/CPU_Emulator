@@ -27,7 +27,7 @@
 
 // memory constants
 #define RAM_SIZE 0xFF // 255 bytes
-#define ROM_SIZE RAM_SIZE/2
+#define ROM_SIZE RAM_SIZE/2 // can adjust if you want
 #define INST_LENGTH 4 // each instruction has a maximum length of 4 bytes
 #define CPU_REG_NO 16
 

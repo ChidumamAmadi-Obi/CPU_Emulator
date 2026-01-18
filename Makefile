@@ -12,6 +12,13 @@
 CXX = g++
 CC = gcc
 
+# identify whih operating system user is on
+ifeq ($(OS),Windows_NT)
+CLEAN = powershell -Command "Remove-Item -ErrorAction SilentlyContinue -Force $(ASSEMBLER_EXEC).exe, $(EMULATOR_EXEC).exe, *.obj, *.o, *.exe"
+else 
+CLEAN = rm $(ASSEMBLER_EXEC) $(EMULATOR_EXEC)
+endif
+
 # directories
 ASSEMBLER_DIR = assembler
 EMULATOR_DIR = emulator
@@ -23,8 +30,8 @@ EMULATOR_SRC = $(wildcard $(EMULATOR_DIR)/src/*.c) # emulator source files
 EMULATOR_INC = -I$(EMULATOR_DIR)/include
 
 # executables
-ASSEMBLER_EXEC = assembler
-EMULATOR_EXEC = emulator
+ASSEMBLER_EXEC = assembler_e
+EMULATOR_EXEC = emulator_e
 
 # _______________________________________________________________________________________ 
 # default target, just build
@@ -53,9 +60,10 @@ run: $(ASSEMBLER_EXEC) $(EMULATOR_EXEC)
 	@echo "Running emulator..."
 	./$(EMULATOR_EXEC)
 
-clean: # clean compiled files
-	powershell -Command "Remove-Item -ErrorAction SilentlyContinue -Force $(ASSEMBLER_EXEC).exe, $(EMULATOR_EXEC).exe, *.obj, *.o, *.exe"
-	
+# remove exec files
+clean:
+	$(CLEAN)
+
 .PHONY: all build run run-only clean
 
 
