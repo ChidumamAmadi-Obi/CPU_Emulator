@@ -25,6 +25,7 @@ void loadProgram(Assembler *assembler){ // loads program from external file and 
         line.erase(line.find_last_not_of(' ') + 1); // trim trailing whitespace before puttin ginto string
         if (DEBUG_RAW_ASM) printf("%s\n", line.c_str());
         assembler->program.rawAsm += line + " ";
+        
     }
 
     if (assembler->program.rawAsm.empty()) {

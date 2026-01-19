@@ -1,6 +1,7 @@
 #pragma once 
 
 #include "config.h"
+#include <terminal_colors.h>
 
 void showMetrics(CPU*cpu){
     COLOR_YELLOW; printf("\nPROGRAM SIZE: "); COLOR_RESET;               COLOR_BOLD_YELLOW; printf("%ld",cpu->metrics.bytesInProgram); COLOR_RESET;

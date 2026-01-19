@@ -1,6 +1,7 @@
 #pragma once
 
 #include "config.hpp"
+#include <terminal_colors.h>
 
 void inspectErrors(Assembler *assembler){ // list errors if any
     if (assembler->errorCode == NONE) {

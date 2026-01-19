@@ -10,16 +10,16 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "color.h"
+#include <ISA.h>
 
 // configure debug mode
 #define SHOW_ERRORS 1
 #define SHOW_SYMBOL_TABLE 1
 #define SHOW_GENERATED_BINARY 1
-#define DEBUG_RAW_ASM 0
-#define DEBUG_TOKENIZER 0
+#define DEBUG_RAW_ASM 1
+#define DEBUG_TOKENIZER 1
 
-#define DEBUG_FIRST_PASS 0
+#define DEBUG_FIRST_PASS 1
 #define DEBUG_SECOND_PASS 0
 
 // macros
@@ -30,72 +30,6 @@
 using namespace std;
 
 //_________________________________________________________________________________________________
-typedef enum{
-    HALT,    
-    STR,
-    LD,
-    JMP,
-    MOV,
-    JMP_OFW,
-    JMP_ZRO,
-    JMP_NEG,
-    JMP_ABV, // jump if both the zero and negative flags are false
-    ADD,
-    SUB,
-    MUL,
-    AND,
-    OR,
-    XOR,
-    EQU,
-    DIV,
-
-    LI, // load immediate
-    ADDI,
-    SUBI,
-    MULI,
-    ANDI,
-    ORI,
-    XORI,
-    EQUI,
-    DIVI,
-    CALL,
-    RET
-
-}Mnemonics;
-typedef enum{
-    R0,
-    R1,
-    R2,
-    R3,
-    R4,
-    R5,
-    R6,
-    R7,
-    R8,
-    R9,
-    R10,
-    R11,
-    R12,
-    R13,
-    R14,
-    R15,
-    PTR_R0,
-    PTR_R1,
-    PTR_R2,
-    PTR_R3,
-    PTR_R4,
-    PTR_R5,
-    PTR_R6,
-    PTR_R7,
-    PTR_R8,
-    PTR_R9,
-    PTR_R10,
-    PTR_R11,
-    PTR_R12,
-    PTR_R13,
-    PTR_R14,
-    PTR_R15
-}Registers;
 typedef enum{ // if error program should stop immediatly
     NONE,
     SYNTAX_ERROR,
@@ -144,7 +78,7 @@ typedef struct{
         {"SUBI",SUBI},
         {"MULI",MULI},
         {"ANDI",ANDI},
-        {"OR",ORI},
+        {"ORI",ORI},
         {"XORI",XORI},
         {"EQUI",EQUI},
         {"DIVI",DIVI},

@@ -10,9 +10,11 @@ void tokenize(Assembler *assembler){ // splits program up into individual "token
     string intermediate;
 
     while(getline(check1, intermediate, ' ')) {
-        assembler->program.tokens.push_back(intermediate);
+        if (!intermediate.empty()){
+            assembler->program.tokens.push_back(intermediate);
+        }
     }
-
+printf("_");
     if (DEBUG_TOKENIZER) {
         for (int i=0; i<assembler->program.tokens.size(); i++){
             printf("%s,",assembler->program.tokens[i].c_str());
