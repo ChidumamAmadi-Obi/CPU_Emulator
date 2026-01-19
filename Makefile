@@ -7,10 +7,10 @@
 CXX = g++
 CC = gcc
 
-# identify whih operating system user is on
+# identify which operating system user is on
 ifeq ($(OS),Windows_NT)
-	CLEAN = powershell -Command "Remove-Item -ErrorAction SilentlyContinue -Force $(ASSEMBLER_EXEC).exe, $(EMULATOR_EXEC).exe, *.obj, *.o, *.exe"
-	CLEAN_ALL = powershell -Command "Remove-Item -ErrorAction SilentlyContinue -Force $(PROGRAM_BIN) $(ASSEMBLER_EXEC).exe, $(EMULATOR_EXEC).exe, *.obj, *.o, *.exe"
+	CLEAN = powershell -Command "Remove-Item -ErrorAction SilentlyContinue -Force $(ASSEMBLER_EXEC).exe, $(EMULATOR_EXEC).exe"
+	CLEAN_ALL = powershell -Command "Remove-Item -ErrorAction SilentlyContinue -Force $(PROGRAM_BIN) $(ASSEMBLER_EXEC).exe, $(EMULATOR_EXEC).exe"
 else 
 	CLEAN = rm -f $(ASSEMBLER_EXEC) $(EMULATOR_EXEC)
 	CLEAN_ALL = rm -f $(PROGRAM_BIN) $(ASSEMBLER_EXEC) $(EMULATOR_EXEC)
@@ -33,7 +33,14 @@ ASSEMBLER_EXEC = assembler_e
 EMULATOR_EXEC = emulator_e
 PROGRAM_BIN = program.bin
 
-help: #shows message
+# Rules
+$(ASSEMBLER_EXEC): $(ASSEMBLER_SRC) 
+	$(CXX) $(CORE_INC) $(ASSEMBLER_INC) -o $@ $(ASSEMBLER_SRC)
+
+$(EMULATOR_EXEC): $(EMULATOR_SRC)
+	$(CC) $(CORE_INC) $(EMULATOR_INC) -o $@ $(EMULATOR_SRC)
+
+help: # shows message
 	@echo.
 	@echo MAKEFILE TARGETS:
 	@echo   all           - Builds both assembler and emulator
@@ -51,12 +58,7 @@ help: #shows message
 
 all: $(ASSEMBLER_EXEC) $(EMULATOR_EXEC) 
 
-	$(ASSEMBLER_EXEC): $(ASSEMBLER_SRC) # builds and runs assembler
-		$(CXX) $(CORE_INC) $(ASSEMBLER_INC) -o $@ $(ASSEMBLER_SRC) 
-
-	$(EMULATOR_EXEC): $(EMULATOR_SRC) # build and run emulator
-		$(CC) $(CORE_INC) $(EMULATOR_INC) -o $@ $(EMULATOR_SRC)
-
+build: all
 
 run: $(ASSEMBLER_EXEC) $(EMULATOR_EXEC) # build and run target (builds if needed, then runs)
 	@echo "Running assembler..." 
@@ -64,18 +66,18 @@ run: $(ASSEMBLER_EXEC) $(EMULATOR_EXEC) # build and run target (builds if needed
 	@echo "Running emulator..."
 	./$(EMULATOR_EXEC)
 
-
-run-emu: $(EMULATOR_EXEC) # run emulator separatly for debugging
+run-emu: $(EMULATOR_EXEC) # run emulator separately for debugging
 	@echo "Running emulator..."
 	./$(EMULATOR_EXEC)
-run-assm: $(ASSEMBLER_EXEC) # run emulator separatly for debugging
+
+run-assm: $(ASSEMBLER_EXEC) # run assembler separately for debugging
 	@echo "Running assembler..." 
 	./$(ASSEMBLER_EXEC)
 
-
 clean: # remove executable files
 	$(CLEAN)
+
 clean-all: # remove executable and binary files
 	$(CLEAN_ALL)
 
-.PHONY: all build run run-only clean
+.PHONY: all build run run-emu run-assm clean clean-all help
