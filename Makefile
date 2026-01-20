@@ -10,7 +10,7 @@ CC = gcc
 # identify which operating system user is on
 ifeq ($(OS),Windows_NT)
 	CLEAN = powershell -Command "Remove-Item -ErrorAction SilentlyContinue -Force $(ASSEMBLER_EXEC).exe, $(EMULATOR_EXEC).exe"
-	CLEAN_ALL = powershell -Command "Remove-Item -ErrorAction SilentlyContinue -Force $(PROGRAM_BIN) $(ASSEMBLER_EXEC).exe, $(EMULATOR_EXEC).exe"
+	CLEAN_ALL = powershell -Command "Remove-Item -ErrorAction SilentlyContinue -Force $(PROGRAM_BIN).bin $(ASSEMBLER_EXEC).exe, $(EMULATOR_EXEC).exe"
 else 
 	CLEAN = rm -f $(ASSEMBLER_EXEC) $(EMULATOR_EXEC)
 	CLEAN_ALL = rm -f $(PROGRAM_BIN) $(ASSEMBLER_EXEC) $(EMULATOR_EXEC)
@@ -31,7 +31,7 @@ CORE_INC = -Icominclude
 # executables
 ASSEMBLER_EXEC = assembler_e
 EMULATOR_EXEC = emulator_e
-PROGRAM_BIN = program.bin
+PROGRAM_BIN = program
 
 # Rules
 $(ASSEMBLER_EXEC): $(ASSEMBLER_SRC) 
@@ -57,9 +57,7 @@ help: # shows message
 	@echo.
 
 all: $(ASSEMBLER_EXEC) $(EMULATOR_EXEC) 
-
 build: all
-
 run: $(ASSEMBLER_EXEC) $(EMULATOR_EXEC) # build and run target (builds if needed, then runs)
 	@echo "Running assembler..." 
 	./$(ASSEMBLER_EXEC)
