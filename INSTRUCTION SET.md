@@ -1,4 +1,4 @@
-
+## INSTRUCTION REFERENCE
 | Instruction | Opcode |    Format   | Description |
 |-------------|--------|-------------|-------------|
 | HALT        | 0x00   | `HALT` | Ends Program |
@@ -29,3 +29,13 @@
 | DIVI | 0x19 | `DIVI rd rs1 val` | Divide register by immediate value |
 | CALL | 0x1A | `CALL addr` | Record current value of PC and jump to start of subroutine |
 | RET | 0x1B | `RET` | Return to address of CALL function |
+
+## ABOUT
+Key Specifications:
+- **Data Width:** 8-bit
+- **Address Space:** 8-bit (255B)
+- **GP Registers:** 16 8-bit general purpose registers
+- **Instruction Format:** 1-3 bytes (opcode + operands)
+
+<img width="796" height="294" alt="image" src="https://github.com/user-attachments/assets/3ede06a8-00fc-4663-b5c7-3975416a0771" />
+
