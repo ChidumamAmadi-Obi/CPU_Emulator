@@ -1,6 +1,8 @@
 # 8-Bit CPU Emulator in C
 Lightweight, modular 8-bit CPU emulator with a multiple-pass assembler written in C/C++ for fun to explore computer architecture, instruction execution, and low-level programming.
 
+click [here](https://github.com/ChidumamAmadi-Obi/CPU_Emulator/blob/main/INSTRUCTION%20SET.md) to view instruction specifications
+
 ### CPU Emulator & Assembler Demo
 https://github.com/user-attachments/assets/8bb39ae9-16c2-4238-ad23-a60aa52ee034
 
