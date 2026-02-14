@@ -29,6 +29,7 @@
 | DIVI | 0x19 | `DIVI rd rs1 val` | Divide register by immediate value |
 | CALL | 0x1A | `CALL addr` | Record current value of PC and jump to start of subroutine |
 | RET | 0x1B | `RET` | Return to address of CALL function |
+| NOP | 0x1C | `NOP` | Do nothing for one cycle |
 
 ## ABOUT
 Key Specifications:
