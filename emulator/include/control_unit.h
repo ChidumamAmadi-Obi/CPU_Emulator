@@ -15,7 +15,7 @@ uint8_t numberOfArgs(CPU*cpu, uint8_t opcode){ // return amount of operands to b
             return 1;                  
         case STR: case LD: case LI: case MOV:
             return 2; 
-        case HALT: case RET: return 0;  
+        case HALT: case RET: case NOP: return 0;  
         default: 
             cpu->fatalError=ERROR_FETCHING_INSTRUCTION; // if first instruction is not a recognized opcode send error
             return 0;
@@ -57,6 +57,7 @@ void cpuDecodeExecute(CPU *cpu){
         case LD:   loadInst(cpu); break;
         case LI:   loadImmInst(cpu); break;
         case MOV:  movInst(cpu); break;
+        case NOP: break; // do nothing
         case HALT: cpu->isRunning = false; break; // end program  
 
         default: 

@@ -30,7 +30,8 @@ typedef enum{
     EQUI,       // 0x18    
     DIVI,       // 0x19    
     CALL,       // 0x1A    
-    RET         // 0x1B    
+    RET,        // 0x1B    
+    NOP         // 0x1C
 
 }Mnemonics;
 typedef enum{

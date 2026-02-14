@@ -11,9 +11,11 @@ CC = gcc
 ifeq ($(OS),Windows_NT)
 	CLEAN = powershell -Command "Remove-Item -ErrorAction SilentlyContinue -Force $(ASSEMBLER_EXEC).exe, $(EMULATOR_EXEC).exe"
 	CLEAN_ALL = powershell -Command "Remove-Item -ErrorAction SilentlyContinue -Force $(PROGRAM_BIN).bin $(ASSEMBLER_EXEC).exe, $(EMULATOR_EXEC).exe"
+	CLEAN-BIN = powershell -Command "Remove-Item -ErrorAction SilentlyContinue -Force $(PROGRAM_BIN).bin"
 else 
 	CLEAN = rm -f $(ASSEMBLER_EXEC) $(EMULATOR_EXEC)
 	CLEAN_ALL = rm -f $(PROGRAM_BIN) $(ASSEMBLER_EXEC) $(EMULATOR_EXEC)
+	CLEAN-BIN = rm -f $(PROGRAM_BIN)
 endif
 
 # directories
@@ -48,6 +50,7 @@ help: # shows message
 	@echo   run-emu       - Runs emulator separately for debugging
 	@echo   run-assm      - Runs assembler separately for debugging
 	@echo   clean         - Remove executable files
+	@echo 	clean-bin     - Remove bin file generated from assembler only
 	@echo   clean-all     - Remove executable and binary files
 	@echo   help          - Shows this help message
 	@echo.
@@ -74,6 +77,9 @@ run-assm: $(ASSEMBLER_EXEC) # run assembler separately for debugging
 
 clean: # remove executable files
 	$(CLEAN)
+
+clean-bin: # remove bin file generated from assembler only (program.bin)
+	$(CLEAN-BIN)
 
 clean-all: # remove executable and binary files
 	$(CLEAN_ALL)

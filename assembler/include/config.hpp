@@ -83,7 +83,8 @@ typedef struct{
         {"EQUI",EQUI},
         {"DIVI",DIVI},
         {"CALL", CALL},
-        {"RET", RET}};
+        {"RET", RET},
+        {"NOP", NOP}};
 
     unordered_map<string,Registers> regMap = {
         {"r0", R0},
