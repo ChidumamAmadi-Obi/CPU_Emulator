@@ -12,17 +12,36 @@
 
 #include <ISA.h>
 
-// configure debug mode
-#define SHOW_ERRORS 1
-#define SHOW_SYMBOL_TABLE 1
-#define SHOW_GENERATED_BINARY 1
-#define DEBUG_RAW_ASM 1
-#define DEBUG_TOKENIZER 1
+// configure debug mode (macros passed by makefile)
+#ifndef SHOW_ERRORS
+#define SHOW_ERRORS 0
+#endif
 
-#define DEBUG_FIRST_PASS 1
+#ifndef SHOW_GENERATED_BINARY
+#define SHOW_GENERATED_BINARY 0
+#endif
+
+#ifndef SHOW_SYMBOL_TABLE
+#define SHOW_SYMBOL_TABLE 0
+#endif
+
+#ifndef DEBUG_RAW_ASM
+#define DEBUG_RAW_ASM 0
+#endif
+
+#ifndef DEBUG_TOKENIZER
+#define DEBUG_TOKENIZER 0
+#endif
+
+#ifndef DEBUG_FIRST_PASS
+#define DEBUG_FIRST_PASS 0
+#endif
+
+#ifndef DEBUG_SECOND_PASS
 #define DEBUG_SECOND_PASS 0
+#endif
 
-// macros
+// otther macros
 #define INVALID -1
 #define UNDEFINED_LABEL -1
 #define INVALID_LITERAL -999

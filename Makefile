@@ -7,6 +7,23 @@
 CXX = g++
 CC = gcc
 
+# use -D to pass macro definitions into c/cpp files
+# default debug flags...
+EMULATOR_DEBUG_FLAGS ?= -DSHOW_ERRORS=1 \
+						-DSHOW_REGISTERS=1 \
+						-DSHOW_PC=1 \
+						-DSHOW_METRICS=1 \
+						-DSHOW_RAM=0 \
+						-DSHOW_FLAGS=0
+
+ASSEMBLER_DEBUG_FLAGS ?= -DSHOW_ERRORS=1 \
+  						 -DSHOW_SYMBOL_TABLE=1 \
+						 -DSHOW_GENERATED_BINARY=1 \
+						 -DDEBUG_RAW_ASM=0 \
+						 -DDEBUG_TOKENIZER=0 \
+						 -DDEBUG_FIRST_PASS=0 \
+						 -DDEBUG_SECOND_PASS=0
+
 # identify which operating system user is on
 ifeq ($(OS),Windows_NT)
 	CLEAN = powershell -Command "Remove-Item -ErrorAction SilentlyContinue -Force $(ASSEMBLER_EXEC).exe, $(EMULATOR_EXEC).exe"
@@ -37,26 +54,46 @@ PROGRAM_BIN = program
 
 # Rules
 $(ASSEMBLER_EXEC): $(ASSEMBLER_SRC) 
-	$(CXX) $(CORE_INC) $(ASSEMBLER_INC) -o $@ $(ASSEMBLER_SRC)
+	$(CXX) $(ASSEMBLER_DEBUG_FLAGS) $(CORE_INC) $(ASSEMBLER_INC) -o $@ $(ASSEMBLER_SRC)
 
 $(EMULATOR_EXEC): $(EMULATOR_SRC)
-	$(CC) $(CORE_INC) $(EMULATOR_INC) -o $@ $(EMULATOR_SRC)
+	$(CC) $(EMULATOR_DEBUG_FLAGS) $(CORE_INC) $(EMULATOR_INC) -o $@ $(EMULATOR_SRC)
 
 help: # shows message
 	@echo.
 	@echo MAKEFILE TARGETS:
-	@echo   all           - Builds both assembler and emulator
-	@echo   run           - Builds if needed, then runs both programs
-	@echo   run-emu       - Runs emulator separately for debugging
-	@echo   run-assm      - Runs assembler separately for debugging
-	@echo   clean         - Remove executable files
-	@echo 	clean-bin     - Remove bin file generated from assembler only
-	@echo   clean-all     - Remove executable and binary files
-	@echo   help          - Shows this help message
+	@echo   all           "Builds both assembler and emulator"
+	@echo   run           "Builds if needed, then runs both programs"
+	@echo   run-emu       "Runs emulator separately for debugging"
+	@echo   run-assm      "Runs assembler separately for debugging"
+	@echo   clean         "Remove executable files"
+	@echo   clean-bin     "Remove bin file generated from assembler only"
+	@echo   clean-all     "Remove executable and binary files"
+	@echo   help          "Shows this help message"
 	@echo.
 	@echo EXAMPLES:
-	@echo   make run      - Build and run both programs
-	@echo   make clean    - Clean up executables
+	@echo   make run      "Build and run both programs"
+	@echo   make clean    "Clean up executables"
+	@echo.
+	@echo.
+	@echo COMPILE TIME DEBUG FLAGS:
+	@echo   assembler     -DSHOW_ERRORS
+	@echo                 -DSHOW_SYMBOL_TABLE
+	@echo                 -DSHOW_GENERATED_BINARY
+	@echo                 -DDEBUG_RAW_ASM
+	@echo                 -DDEBUG_TOKENIZER
+	@echo                 -DDEBUG_FIRST_PASS 
+	@echo                 -DDEBUG_SECOND_PASS
+	@echo 	emulator      -DSHOW_ERRORS
+	@echo                 -DSHOW_RAM
+	@echo                 -DSHOW_REGISTERS
+	@echo                 -DSHOW_FLAGS
+	@echo                 -DSHOW_PC
+	@echo                 -SHOW_METRICS
+	@echo
+	@echo EXAMPLES
+	@echo   make run EMULATOR_DEBUG_FLAGS=-DSHOW_ERRORS=1 ASSEMBLER_DEBUG_FLAGS=-DSHOW_ERRORS
+	@echo   "ONLY enables errors reporting for emulator and assembler"
 	@echo.
 
 all: $(ASSEMBLER_EXEC) $(EMULATOR_EXEC) 

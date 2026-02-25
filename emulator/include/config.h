@@ -10,13 +10,26 @@
 #include <ISA.h>
 #include <terminal_colors.h>
 
-// debugging
-#define SHOW_ERRORS 1
+// debugging (macros passed by makefile)
+#ifndef SHOW_ERRORS
+#define SHOW_ERRORS 0
+#endif
+#ifndef SHOW_RAM
 #define SHOW_RAM 0
-#define SHOW_REGISTERS 1
+#endif
+#ifndef SHOW_REGISTERS
+#define SHOW_REGISTERS 0
+#endif
+#ifndef SHOW_FLAGS
 #define SHOW_FLAGS 0
-#define SHOW_PC 1 // print each executed instruction
-#define SHOW_METRICS 1 // print execution time and completed cycles
+#endif
+#ifndef SHOW_PC 
+#define SHOW_PC 0
+#endif
+#ifndef SHOW_METRICS
+#define SHOW_METRICS 0 
+#endif
+
 
 #define PRINT_ALU_ERRORS 0
 
