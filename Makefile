@@ -9,20 +9,14 @@ CC = gcc
 
 # use -D to pass macro definitions into c/cpp files
 # default debug flags...
-EMULATOR_DEBUG_FLAGS ?= -DSHOW_ERRORS=1 \
-						-DSHOW_REGISTERS=1 \
-						-DSHOW_PC=1 \
-						-DSHOW_METRICS=1 \
-						-DSHOW_RAM=0 \
-						-DSHOW_FLAGS=0
+EMULATOR_DEBUG_FLAGS ?= -DSHOW_ERRORS \
+						-DSHOW_REGISTERS \
+						-DSHOW_PC \
+						-DSHOW_METRICS \
 
-ASSEMBLER_DEBUG_FLAGS ?= -DSHOW_ERRORS=1 \
-  						 -DSHOW_SYMBOL_TABLE=1 \
-						 -DSHOW_GENERATED_BINARY=1 \
-						 -DDEBUG_RAW_ASM=0 \
-						 -DDEBUG_TOKENIZER=0 \
-						 -DDEBUG_FIRST_PASS=0 \
-						 -DDEBUG_SECOND_PASS=0
+ASSEMBLER_DEBUG_FLAGS ?= -DSHOW_ERRORS \
+  						 -DSHOW_SYMBOL_TABLE \
+						 -DSHOW_GENERATED_BINARY \
 
 # identify which operating system user is on
 ifeq ($(OS),Windows_NT)
@@ -97,7 +91,9 @@ help: # shows message
 	@echo.
 
 all: $(ASSEMBLER_EXEC) $(EMULATOR_EXEC) 
+
 build: all
+
 run: $(ASSEMBLER_EXEC) $(EMULATOR_EXEC) # build and run target (builds if needed, then runs)
 	@echo "Running assembler..." 
 	./$(ASSEMBLER_EXEC)

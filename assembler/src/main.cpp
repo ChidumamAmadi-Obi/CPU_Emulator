@@ -10,7 +10,7 @@ in the second pass the machine code is produced
 load->tokenizer->first pass->second pass-> export machine code
 */ 
 
-#include "debug_asm.hpp"
+#include "debug.hpp"
 #include "assembler.hpp"
 
 int main() { 
