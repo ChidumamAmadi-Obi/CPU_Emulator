@@ -1,6 +1,5 @@
 #include "helpers.hpp"
 
-// FOR FIRST PASS _________________________________________________________________________________________________
 bool isLabel(string pastToken){ // checks if token is an nudefined label or subroutine. else returns false
     if (pastToken.compare("CALL") == 0) return true;
     if (pastToken.compare("JMP_ABV") == 0) return true;
@@ -48,7 +47,6 @@ bool isNumber(string token) { // checks if number is in desired format, else ret
     return false;
 }
 
-// FOR SECOND PASS ________________________________________________________________________________________________
 int16_t handleInt(Assembler *assembler,string token){ // checks for correct literal format, and returns interger
     if (token.back() == ':') return -1; // if label return
     if (token.front() =='*'){ // " * " symbolize memory locations in ram

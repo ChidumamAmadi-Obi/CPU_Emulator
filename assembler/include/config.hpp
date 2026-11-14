@@ -12,14 +12,12 @@
 
 #include <ISA.h>
 
-// otther macros
 #define INVALID -1
 #define UNDEFINED_LABEL -1
 #define INVALID_LITERAL -999
 
 using namespace std;
 
-//_________________________________________________________________________________________________
 typedef enum{ // if error program should stop immediatly
     NONE,
     SYNTAX_ERROR,
@@ -30,7 +28,6 @@ typedef enum{ // if error program should stop immediatly
     BIN_GEN_ERROR
 }ProgramErrors;
 
-//_________________________________________________________________________________________________
 typedef struct{
     string rawAsm = "";
     string invalidToken="";
@@ -143,8 +140,3 @@ typedef struct{
         {"*R15",PTR_R15}
     };
 }Maps;
-
-/*
-https://www.geeksforgeeks.org/compiler-design/introduction-of-assembler/
-
-*/

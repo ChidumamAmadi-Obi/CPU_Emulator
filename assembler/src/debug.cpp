@@ -47,3 +47,17 @@ void inspectBinary(Assembler *assembler){ // print binary output in hex
         COLOR_RESET;
     } 
 }
+
+void inspect(Assembler *assemlber) {
+    #ifdef SHOW_SYMBOL_TABLE
+        inspectSymbolTable(&assembler);
+    #endif
+
+    #ifdef SHOW_GENERATED_BINARY
+        inspectBinary(&assembler); 
+    #endif
+    
+    #ifdef SHOW_ERRORS
+        inspectErrors(&assembler); 
+    #endif
+}
