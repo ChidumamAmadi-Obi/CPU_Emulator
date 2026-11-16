@@ -10,7 +10,7 @@ void tokenize(Assembler *assembler){ // splits program up into individual "token
             assembler->program.tokens.push_back(intermediate);
         }
     }
-printf("_");
+
     #ifdef DEBUG_TOKENIZER
         for (int i=0; i<assembler->program.tokens.size(); i++){
             printf("%s,",assembler->program.tokens[i].c_str());
@@ -19,11 +19,12 @@ printf("_");
 }
 void passOne(Assembler *assembler) { // check syntax and get labels w their location counters
     Maps compareMaps;
-    uint8_t byteCounter=0; // keeps track of byte position of every token
+    uint16_t byteCounter=0; // keeps track of byte position of every token
     string token;
     string pastToken ="";
     bool printOut=false;
     bool isTokenLabel=false;
+    bool isTokenAddress=false;
     bool gSyntax=false;
 
     if(assembler->errorCode!=NONE) return;
@@ -66,8 +67,8 @@ void passOne(Assembler *assembler) { // check syntax and get labels w their loca
         } else if (isLabel(pastToken)) {// if undefined label or subroutine, will check if label actually exists in second pass
             gSyntax=true; 
             assembler->program.symbolTable[token]=UNDEFINED_LABEL;
-        }
-        
+        } 
+
         if (!gSyntax) {
             assembler->errorCode=SYNTAX_ERROR;
             assembler->program.invalidToken=token;
@@ -85,7 +86,7 @@ void passTwo(Assembler *assembler){ // generates binary and replaces symbols wit
     int IndexM=0; // machine code index
     string verifiedToken;
     int16_t literal;
-    int8_t location;
+    int16_t location;
     int8_t bin;
 
     #ifdef DEBUG_SECOND_PASS
@@ -111,7 +112,7 @@ void passTwo(Assembler *assembler){ // generates binary and replaces symbols wit
         // if a valid token add binary to machine code verctor 
         if (location != INVALID) assembler->program.machineCode.push_back(location); 
         else if (bin != INVALID)  assembler->program.machineCode.push_back((uint8_t)bin); 
-        else if (literal != INVALID_LITERAL) assembler->program.machineCode.push_back((uint8_t)literal);    
+        else if (literal != INVALID_LITERAL) assembler->program.machineCode.push_back((uint8_t)literal);
         if (printOut) printf("%s -> 0x%02X\n",assembler->program.tokens[i].c_str(), assembler->program.machineCode[IndexM]);
         IndexM++;        
     } 

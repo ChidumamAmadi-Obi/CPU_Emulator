@@ -52,28 +52,28 @@ int16_t handleInt(Assembler *assembler,string token){ // checks for correct lite
     if (token.front() =='*'){ // " * " symbolize memory locations in ram
         if ((token[1] == '0') && (token[2] == 'x' || token[2] == 'X')) {
             long decNumberLong = strtol(token.c_str()+1, NULL, 16);
-            return (int8_t)decNumberLong;
+            return (int16_t)decNumberLong;
         } else if (token[1] == 'b'  || token[1] == 'B') {
             long decNumberLong = strtol(token.c_str()+2, NULL, 2);
-            return (int8_t)decNumberLong;
+            return (int16_t)decNumberLong;
         } else {
             long decNumberLong = strtol(token.c_str()+1, NULL, 10);
-            return (int8_t)decNumberLong;
+            return (int16_t)decNumberLong;
         }
     } else {
         if ((token.front() == '0') && (token[1] == 'x' || token[1] == 'X')) {
             long decNumberLong = strtol(token.c_str(), NULL, 16);
-            return (int8_t)decNumberLong;
+            return (int16_t)decNumberLong;
         } else if (token.front() == 'b' || token.front() == 'B') {
             long decNumberLong = strtol(token.c_str()+1, NULL, 2);
-            return (int8_t)decNumberLong;
+            return (int16_t)decNumberLong;
         } else { // just a normal number
             long decNumberLong = strtol(token.c_str(), NULL, 10);
-            return (int8_t)decNumberLong;
+            return (int16_t)decNumberLong;
         }
     } return INVALID_LITERAL; // if invalid
 }
-int8_t getLabelLocation(Assembler *assembler, string label) { // returns location of label or start of subroutine to be replaced
+int16_t getLabelLocation(Assembler *assembler, string label) { // returns location of label or start of subroutine to be replaced
     if(assembler->program.symbolTable.find(label) == assembler->program.symbolTable.end()){ 
         return INVALID;
     } return assembler->program.symbolTable[label];

@@ -3,6 +3,7 @@
 
 int main() { 
     Assembler assembler;
+    
     assemble(&assembler);
 
     inspect(&assembler); // debug if needed

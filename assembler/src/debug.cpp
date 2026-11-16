@@ -48,16 +48,16 @@ void inspectBinary(Assembler *assembler){ // print binary output in hex
     } 
 }
 
-void inspect(Assembler *assemlber) {
+void inspect(Assembler *assembler) {
     #ifdef SHOW_SYMBOL_TABLE
-        inspectSymbolTable(&assembler);
+        inspectSymbolTable(assembler);
     #endif
 
     #ifdef SHOW_GENERATED_BINARY
-        inspectBinary(&assembler); 
+        inspectBinary(assembler); 
     #endif
     
     #ifdef SHOW_ERRORS
-        inspectErrors(&assembler); 
+        inspectErrors(assembler); 
     #endif
 }

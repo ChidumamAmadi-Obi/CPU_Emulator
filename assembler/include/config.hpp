@@ -35,7 +35,7 @@ typedef struct{
     uint32_t sizeOfProgam=0; // size of program in bytes
     vector <string> tokens;
     vector <uint8_t> machineCode; // each token will take up 8 bytes
-    unordered_map<string,int8_t> symbolTable; 
+    unordered_map<string,int16_t> symbolTable; 
 }Program;
 typedef struct{
     Program program;
