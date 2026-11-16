@@ -10,29 +10,6 @@
 #include <ISA.h>
 #include <terminal_colors.h>
 
-// debugging (macros passed by makefile)
-#ifndef SHOW_ERRORS
-#define SHOW_ERRORS 0
-#endif
-#ifndef SHOW_RAM
-#define SHOW_RAM 0
-#endif
-#ifndef SHOW_REGISTERS
-#define SHOW_REGISTERS 0
-#endif
-#ifndef SHOW_FLAGS
-#define SHOW_FLAGS 0
-#endif
-#ifndef SHOW_PC 
-#define SHOW_PC 0
-#endif
-#ifndef SHOW_METRICS
-#define SHOW_METRICS 0 
-#endif
-
-
-#define PRINT_ALU_ERRORS 0
-
 // alu constants
 #define MSB 0x80
 #define LSB 0x01
@@ -45,7 +22,7 @@
 #define INST_LENGTH 4 // each instruction has a maximum length of 4 bytes
 #define CPU_REG_NO 16
 
-#if PRINT_ALU_ERRORS == 1
+#ifdef PRINT_ALU_ERRORS
 #define printError(x) printf(x)
 #else
 #define printError(x)

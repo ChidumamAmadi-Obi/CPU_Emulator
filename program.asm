@@ -3,7 +3,7 @@
 ; ===========================
 
     LI r15 12; temp
-    STR 0x01 0xFF r15
+    STR 0xFE r15
     JMP END
     NOP
     NOP

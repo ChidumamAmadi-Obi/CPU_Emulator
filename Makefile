@@ -74,7 +74,7 @@ help: # shows message
 	@echo   make clean    "Clean up executables"
 	@echo.
 	@echo.
-	@echo COMPILE TIME DEBUG FLAGS:
+	@echo MACROS:
 	@echo   assembler     -DSHOW_ERRORS
 	@echo                 -DSHOW_SYMBOL_TABLE
 	@echo                 -DSHOW_GENERATED_BINARY
@@ -90,7 +90,7 @@ help: # shows message
 	@echo                 -SHOW_METRICS
 	@echo
 	@echo EXAMPLES
-	@echo   make run EMULATOR_DEBUG_FLAGS=-DSHOW_ERRORS=1 ASSEMBLER_DEBUG_FLAGS=-DSHOW_ERRORS
+	@echo   make run EMULATOR_DEBUG_FLAGS=-DSHOW_ERRORS ASSEMBLER_DEBUG_FLAGS=-DSHOW_ERRORS
 	@echo   "ONLY enables errors reporting for emulator and assembler"
 	@echo.
 
@@ -99,7 +99,7 @@ all: $(ASSEMBLER_EXEC) $(EMULATOR_EXEC)
 build: all
 
 run: $(ASSEMBLER_EXEC) $(EMULATOR_EXEC) # build and run target (builds if needed, then runs)
-	./$(ASSEMBLER_EXEC)
+	./$(ASSEMBLER_EXEC) $(BIN).bin $(ASM).asm
 	./$(EMULATOR_EXEC)
 
 run-emu: $(EMULATOR_EXEC) # run emulator separately for debugging
