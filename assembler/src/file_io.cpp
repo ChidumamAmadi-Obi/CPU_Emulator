@@ -3,7 +3,7 @@
 
 
 void loadProgram(Assembler *assembler){ // loads program from external file and stores in string
-    ifstream asmFile("program.asm");
+    ifstream asmFile(assembler->programInputFilePath);
     string line="";
     
     if (!asmFile.is_open()) {
@@ -42,7 +42,7 @@ void loadProgram(Assembler *assembler){ // loads program from external file and 
 void exportMachineCode(Assembler *assembler){
     if(assembler->errorCode!=NONE) return;
 
-    ofstream binOut("program.bin",ios::binary);
+    ofstream binOut(assembler->programOutputFilePath,ios::binary);
 
     if (!binOut.is_open()) {
         assembler->errorCode = EXPORTING_BINARY_ERROR;

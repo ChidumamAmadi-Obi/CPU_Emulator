@@ -18,6 +18,10 @@ ASSEMBLER_DEBUG_FLAGS ?= -DSHOW_ERRORS \
   						 -DSHOW_SYMBOL_TABLE \
 						 -DSHOW_GENERATED_BINARY \
 
+# file paths to binary output and asm src code
+ASM ?=
+BIN ?=
+
 # identify which operating system user is on
 ifeq ($(OS),Windows_NT)
 	CLEAN = powershell -Command "Remove-Item -ErrorAction SilentlyContinue -Force $(ASSEMBLER_EXEC).exe, $(EMULATOR_EXEC).exe"
@@ -95,18 +99,14 @@ all: $(ASSEMBLER_EXEC) $(EMULATOR_EXEC)
 build: all
 
 run: $(ASSEMBLER_EXEC) $(EMULATOR_EXEC) # build and run target (builds if needed, then runs)
-	@echo "Running assembler..." 
 	./$(ASSEMBLER_EXEC)
-	@echo "Running emulator..."
 	./$(EMULATOR_EXEC)
 
 run-emu: $(EMULATOR_EXEC) # run emulator separately for debugging
-	@echo "Running emulator..."
 	./$(EMULATOR_EXEC)
 
 run-assm: $(ASSEMBLER_EXEC) # run assembler separately for debugging
-	@echo "Running assembler..." 
-	./$(ASSEMBLER_EXEC)
+	./$(ASSEMBLER_EXEC) $(BIN).bin $(ASM).asm
 
 clean: # remove executable files
 	$(CLEAN)

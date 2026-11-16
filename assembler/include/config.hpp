@@ -40,6 +40,8 @@ typedef struct{
 typedef struct{
     Program program;
     ProgramErrors errorCode = NONE;
+    string programInputFilePath = "program.asm";
+    string programOutputFilePath = "program.bin";    
 }Assembler;
 typedef struct{
     unordered_map<string,Mnemonics> mnemonicMap = {
