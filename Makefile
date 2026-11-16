@@ -19,8 +19,8 @@ ASSEMBLER_DEBUG_FLAGS ?= -DSHOW_ERRORS \
 						 -DSHOW_GENERATED_BINARY \
 
 # file paths to binary output and asm src code
-ASM ?=
-BIN ?=
+ASM ?= program
+BIN ?= program
 
 # identify which operating system user is on
 ifeq ($(OS),Windows_NT)
