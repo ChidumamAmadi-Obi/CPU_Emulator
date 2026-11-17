@@ -1,9 +1,3 @@
-# IF YOU WANTED TO BUILD AND RUN MANUALLY ___________________________________________
-# g++ -Iassembler/include -o assembler assembler/src/*.cpp
-# gcc -Iemulator/include -o emulator emulator/src/*.c  
-# ./assembler
-# ./emulator
-
 CXX = g++
 CC = gcc
 
@@ -19,18 +13,14 @@ ASSEMBLER_DEBUG_FLAGS ?= -DSHOW_ERRORS \
 						 -DSHOW_GENERATED_BINARY \
 
 # file paths to binary output and asm src code
-ASM ?= program
-BIN ?= program
+ASM ?= example_programs/default_program
+BIN ?= example_programs/bin/default_program
 
 # identify which operating system user is on
 ifeq ($(OS),Windows_NT)
 	CLEAN = powershell -Command "Remove-Item -ErrorAction SilentlyContinue -Force $(ASSEMBLER_EXEC).exe, $(EMULATOR_EXEC).exe"
-	CLEAN_ALL = powershell -Command "Remove-Item -ErrorAction SilentlyContinue -Force $(PROGRAM_BIN).bin $(ASSEMBLER_EXEC).exe, $(EMULATOR_EXEC).exe"
-	CLEAN-BIN = powershell -Command "Remove-Item -ErrorAction SilentlyContinue -Force $(PROGRAM_BIN).bin"
 else 
 	CLEAN = rm -f $(ASSEMBLER_EXEC) $(EMULATOR_EXEC)
-	CLEAN_ALL = rm -f $(PROGRAM_BIN) $(ASSEMBLER_EXEC) $(EMULATOR_EXEC)
-	CLEAN-BIN = rm -f $(PROGRAM_BIN)
 endif
 
 # directories
@@ -48,7 +38,6 @@ CORE_INC = -Icominclude
 # executables
 ASSEMBLER_EXEC = assembler_e
 EMULATOR_EXEC = emulator_e
-PROGRAM_BIN = program
 
 # Rules
 $(ASSEMBLER_EXEC): $(ASSEMBLER_SRC) 
@@ -65,8 +54,6 @@ help: # shows message
 	@echo   run-emu       "Runs emulator separately for debugging"
 	@echo   run-assm      "Runs assembler separately for debugging"
 	@echo   clean         "Remove executable files"
-	@echo   clean-bin     "Remove bin file generated from assembler only"
-	@echo   clean-all     "Remove executable and binary files"
 	@echo   help          "Shows this help message"
 	@echo.
 	@echo EXAMPLES:
@@ -94,27 +81,24 @@ help: # shows message
 	@echo   "ONLY enables errors reporting for emulator and assembler"
 	@echo.
 
-all: $(ASSEMBLER_EXEC) $(EMULATOR_EXEC) 
+all: 
+	$(ASSEMBLER_EXEC) 
+	$(EMULATOR_EXEC) 
 
-build: all
+build: 
+	all
 
-run: $(ASSEMBLER_EXEC) $(EMULATOR_EXEC) # build and run target (builds if needed, then runs)
+run:  # build and run target (builds if needed, then runs)
+	$(ASSEMBLER_EXEC) 
+	$(EMULATOR_EXEC)
 	./$(ASSEMBLER_EXEC) $(BIN).bin $(ASM).asm
-	./$(EMULATOR_EXEC)
+	./$(EMULATOR_EXEC) $(BIN).bin
 
 run-emu: $(EMULATOR_EXEC) # run emulator separately for debugging
-	./$(EMULATOR_EXEC)
+	./$(EMULATOR_EXEC) $(BIN).bin
 
 run-assm: $(ASSEMBLER_EXEC) # run assembler separately for debugging
 	./$(ASSEMBLER_EXEC) $(BIN).bin $(ASM).asm
 
 clean: # remove executable files
 	$(CLEAN)
-
-clean-bin: # remove bin file generated from assembler only (program.bin)
-	$(CLEAN-BIN)
-
-clean-all: # remove executable and binary files
-	$(CLEAN_ALL)
-
-.PHONY: all build run run-emu run-assm clean clean-all help

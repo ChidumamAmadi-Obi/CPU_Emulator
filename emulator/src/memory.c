@@ -11,7 +11,7 @@ void clearRAM(CPU* cpu){ // clears data in ram but not read only memory
 }
 
 void loadProgram(CPU *cpu){ // loads program from external txt file into read only memory
-    FILE *binFile = fopen("program.bin", "rb");        
+    FILE *binFile = fopen(cpu->binFilePath, "rb");        
     uint32_t programSize; 
     size_t bytesRead=0;
     if (binFile == NULL){

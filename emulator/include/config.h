@@ -93,4 +93,6 @@ typedef struct{ // CPU variables
     bool negativeFlag;
 
     bool isRunning;
+
+    char *binFilePath;
 }CPU;
