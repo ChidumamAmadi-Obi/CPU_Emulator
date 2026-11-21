@@ -11,20 +11,21 @@ int main(int argc, char *argv[]) {
 
     assemble(&assembler);
     inspect(&assembler); // debug if needed
-    
+    printf("%d/%d BYTES",assembler.program.sizeOfProgam, MAX_WORDS);
     return 0;
 }
 
 int handleFilePaths(Assembler *assembler,int argc, char *argv[]){
     if (argc > 1) {
-        if (argc == 2) {
-            printf("NO INPUT FILE SPECIFIED\n");
+        if (argc == 3) {
+            printf("NOT ENOUGH ARGUMENTS\n");
             return -1;
-        } else if (argc > 3) {
+        } else if (argc > 4) {
             printf("TOO MANY ARGUMENTS\n");
             return -1;
         } else {
-            assembler->programInputFilePath = argv[2];
+            assembler->programHexDirectoryPath = argv[2];
+            assembler->programInputFilePath = argv[3];
             assembler->programOutputFilePath = argv[1];
         }
         return 0;

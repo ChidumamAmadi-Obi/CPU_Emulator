@@ -16,6 +16,14 @@
 #define UNDEFINED_LABEL -1
 #define INVALID_LITERAL -999
 
+#define DEFAULT_INPUT_FILE_PATH "program.asm"
+#define DEFAULT_OUTPUT_FILE_PATH "program.bin"
+#define DEFAULT_HEX_DIR_PATH "hex"
+
+constexpr size_t BANK_SIZE = 256;
+constexpr size_t NUM_BANKS = 4;
+constexpr size_t MAX_WORDS = BANK_SIZE * NUM_BANKS;
+
 using namespace std;
 
 typedef enum{ // if error program should stop immediatly
@@ -25,7 +33,8 @@ typedef enum{ // if error program should stop immediatly
     NO_ASM_ERROR,
     EXPORTING_BINARY_ERROR,
     SYMBOL_ERROR,
-    BIN_GEN_ERROR
+    BIN_GEN_ERROR,
+    PRGM_SIZE_ERROR
 }ProgramErrors;
 
 typedef struct{
@@ -40,8 +49,9 @@ typedef struct{
 typedef struct{
     Program program;
     ProgramErrors errorCode = NONE;
-    string programInputFilePath = "program.asm";
-    string programOutputFilePath = "program.bin";    
+    string programInputFilePath = DEFAULT_INPUT_FILE_PATH;
+    string programOutputFilePath = DEFAULT_OUTPUT_FILE_PATH;
+    string programHexDirectoryPath = DEFAULT_HEX_DIR_PATH;
 }Assembler;
 typedef struct{
     unordered_map<string,Mnemonics> mnemonicMap = {

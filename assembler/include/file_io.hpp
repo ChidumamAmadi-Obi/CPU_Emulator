@@ -4,4 +4,5 @@
 
 void loadProgram(Assembler *assembler);
 
-void exportMachineCode(Assembler *assembler);
+void exportMachineCodeBin(Assembler *assembler);
+void exportMachineCodeHex(Assembler *assembler);

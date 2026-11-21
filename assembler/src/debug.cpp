@@ -14,6 +14,7 @@ void inspectErrors(Assembler *assembler){ // list errors if any
         case SYNTAX_ERROR: printf("SYNTAX ERROR, '%s' IS AN INVALID TOKEN\n",assembler->program.invalidToken.c_str()); break;
         case SYMBOL_ERROR: printf("SYMBOL TABLE ERROR, LABEL '%s' IS UNDEFINED\n",assembler->program.invalidLabel.c_str()); break;
         case BIN_GEN_ERROR: printf("ERROR GENERATING BINARY FILE\n"); break;
+        case PRGM_SIZE_ERROR: printf("PROGRAM SIZE TOO LARGE, %d/%d\n", assembler->program.sizeOfProgam, MAX_WORDS); break;
         default: break;
     }
     COLOR_RESET; 
@@ -42,7 +43,6 @@ void inspectBinary(Assembler *assembler){ // print binary output in hex
             if ((i+1)%8 == 0) printf("\n");
         }
         COLOR_YELLOW;
-        printf("\n PROGRAM SIZE %d BYTES",assembler->program.sizeOfProgam);
         printf("\n========================================");
         COLOR_RESET;
     } 

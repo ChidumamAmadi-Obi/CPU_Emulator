@@ -126,5 +126,6 @@ void assemble(Assembler *assembler){ // runs assembler
     passOne(assembler);
     passTwo(assembler);
 
-    exportMachineCode(assembler);
+    exportMachineCodeBin(assembler);
+    exportMachineCodeHex(assembler);
 }

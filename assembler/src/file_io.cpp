@@ -3,7 +3,7 @@
 
 
 void loadProgram(Assembler *assembler){ // loads program from external file and stores in string
-    ifstream asmFile(assembler->programInputFilePath);
+    ifstream asmFile((assembler->programInputFilePath + ".asm"));
     string line="";
     
     if (!asmFile.is_open()) {
@@ -39,10 +39,10 @@ void loadProgram(Assembler *assembler){ // loads program from external file and 
     asmFile.close();
 }
 
-void exportMachineCode(Assembler *assembler){
+void exportMachineCodeBin(Assembler *assembler){
     if(assembler->errorCode!=NONE) return;
 
-    ofstream binOut(assembler->programOutputFilePath,ios::binary);
+    ofstream binOut((assembler->programOutputFilePath + ".bin"),ios::binary);
 
     if (!binOut.is_open()) {
         assembler->errorCode = EXPORTING_BINARY_ERROR;
@@ -58,3 +58,44 @@ void exportMachineCode(Assembler *assembler){
     binOut.flush();
     binOut.close();
 }
+
+// deepseek generated // 
+void exportMachineCodeHex(Assembler *assembler) {
+    if (assembler->errorCode != NONE) return;
+
+    const auto &mc = assembler->program.machineCode;   // vector<uint8_t>
+
+    if (mc.size() > MAX_WORDS) {
+        assembler->errorCode = PRGM_SIZE_ERROR;   // program doesn't fit 4 banks
+        return;
+    }
+
+    size_t word_i = 0;
+    for (size_t bank = 0; bank < NUM_BANKS; ++bank) {
+        const string path =
+            assembler->programHexDirectoryPath + "/ram_" + to_string(bank) + ".hex";
+
+        ofstream hexOut(path, ios::out | ios::trunc);
+        if (!hexOut.is_open()) {
+            assembler->errorCode = EXPORTING_BINARY_ERROR;
+            return;
+        }
+
+        if (word_i >= mc.size()) {
+            // Empty bank: a single blank line so the file still exists and is readable.
+            hexOut << '\n';
+        } else {
+            const size_t wordsInBank = min(BANK_SIZE, mc.size() - word_i);
+            for (size_t i = 0; i < wordsInBank; ++i, ++word_i) {
+                char buf[4];
+                snprintf(buf, sizeof(buf), "%02x\n",
+                              static_cast<unsigned>(mc[word_i]) & 0xFFu);
+                hexOut << buf;
+            }
+        }
+
+        hexOut.flush();
+        hexOut.close();
+    }
+}
+// deepseek generated // 

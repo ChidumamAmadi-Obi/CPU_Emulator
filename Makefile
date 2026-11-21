@@ -4,17 +4,14 @@ CC = gcc
 # use -D to pass macro definitions into c/cpp files
 # default debug flags...
 EMULATOR_DEBUG_FLAGS ?= -DSHOW_ERRORS \
-						-DSHOW_REGISTERS \
-						-DSHOW_PC \
 						-DSHOW_METRICS \
 
-ASSEMBLER_DEBUG_FLAGS ?= -DSHOW_ERRORS \
-  						 -DSHOW_SYMBOL_TABLE \
-						 -DSHOW_GENERATED_BINARY \
+ASSEMBLER_DEBUG_FLAGS ?= -DSHOW_ERRORS
 
 # file paths to binary output and asm src code
 ASM ?= example_programs/default_program
 BIN ?= example_programs/bin/default_program
+HEX ?= example_programs/hex
 
 # identify which operating system user is on
 ifeq ($(OS),Windows_NT)
@@ -91,14 +88,14 @@ build:
 run:  # build and run target (builds if needed, then runs)
 	$(ASSEMBLER_EXEC) 
 	$(EMULATOR_EXEC)
-	./$(ASSEMBLER_EXEC) $(BIN).bin $(ASM).asm
+	./$(ASSEMBLER_EXEC) $(BIN) $(HEX) $(ASM)
 	./$(EMULATOR_EXEC) $(BIN).bin
 
 run-emu: $(EMULATOR_EXEC) # run emulator separately for debugging
 	./$(EMULATOR_EXEC) $(BIN).bin
 
 run-assm: $(ASSEMBLER_EXEC) # run assembler separately for debugging
-	./$(ASSEMBLER_EXEC) $(BIN).bin $(ASM).asm
+	./$(ASSEMBLER_EXEC) $(BIN) $(HEX) $(ASM)
 
 clean: # remove executable files
 	$(CLEAN)
